@@ -1,0 +1,47 @@
+{
+  "name": "contentstack-stenciljs-starter-app",
+  "private": true,
+  "version": "1.0.0",
+  "description": "A simple starter app build using Stencil Js and Contentstack",
+  "type": "module",
+  "author": "Contentstack",
+  "scripts": {
+    "prebuild": "node ./scripts/rm-www.js",
+    "build": "stencil build",
+    "start": "stencil build --dev --watch --serve --port 3000",
+    "test": "stencil test --spec --e2e",
+    "test.watch": "stencil test --spec --e2e --watchAll",
+    "generate": "stencil generate",
+    "lint": "eslint src/**/*{.ts,.tsx}"
+  },
+  "devDependencies": {
+    "@stencil/core": "2.0.0",
+    "@stencil/router": "^1.0.1",
+    "@types/node": "^15.12.4",
+    "dotenv": "^10.0.0",
+    "eslint-plugin-react": "^7.24.0",
+    "prettier": "2.3.1",
+    "workbox-build": "^4.3.1"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@saasquatch/stencil-html-parser": "^1.0.2",
+    "@stencil/eslint-plugin": "^0.3.1",
+    "@stencil/helmet": "^0.3.2",
+    "@typescript-eslint/parser": "^4.28.2",
+    "contentstack": "^3.13.2",
+    "moment": "^2.29.1",
+    "rollup-plugin-dotenv": "^0.3.0"
+  },
+  "keywords": [
+    "stencil",
+    "Contentstack"
+  ],
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": {
+    "url": "https://github.com/contentstack/starter-apps/stencil-js"
+  }
+}
