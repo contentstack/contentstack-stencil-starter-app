@@ -1,6 +1,7 @@
 import { Component, State, h } from '@stencil/core';
 import { parse } from '@saasquatch/stencil-html-parser';
 import Stack from '../../sdk-plugin/index';
+import store from '../../store/state';
 
 @Component({
   tag: 'app-footer',
@@ -15,6 +16,7 @@ export class AppFooter {
   async componentWillLoad() {
     try {
       const footer = await Stack.getEntry('footer', '');
+      store.set('footer', footer[0][0]);
       this.internalProps = {
         footer: footer[0][0]
       };

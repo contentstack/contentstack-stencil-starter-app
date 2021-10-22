@@ -3,6 +3,7 @@ import Stack from '../../sdk-plugin/index';
 import RenderComponents from '../render-components';
 import Helmet from '@stencil/helmet';
 import { metaData } from '../../utils/common';
+import store from '../../store/state';
 
 @Component({
   tag: 'app-contact',
@@ -17,7 +18,9 @@ export class AppContact {
   async componentWillLoad() {
     try {
       const result = await Stack.getEntryByUrl('page', '/contact-us', ['page_components.from_blog.featured_blogs']);
-
+      store.set('page', result[0]);
+      store.set('blogpost', null);
+      
       this.internalProps = {
         result: result[0],
       };
@@ -31,6 +34,7 @@ export class AppContact {
     return (
       <div>
         <Helmet>{result.seo && result.seo.enable_search_indexing ? metaData(result.seo) : null}</Helmet>
+        <app-devtools />
         {result.page_components && <RenderComponents pageComponents={result.page_components} />}
       </div>
     );
