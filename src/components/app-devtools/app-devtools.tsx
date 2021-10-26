@@ -2,8 +2,20 @@ import { h, Component, State } from '@stencil/core';
 import store from '../../store/state';
 import '@alenaksu/json-viewer';
 
+function filterObject(inputObject) {
+  const unWantedProps = ['uid', '_version', 'ACL', '_in_progress', 'created_at', 'created_by', 'updated_at', 'updated_by', 'publish_details'];
+  for (const key in inputObject) {
+    unWantedProps.includes(key) && delete inputObject[key];
+    if (typeof inputObject[key] !== 'object') {
+      continue;
+    }
+    inputObject[key] = filterObject(inputObject[key]);
+  }
+  return inputObject;
+}
+
 @Component({
-  tag: 'app-devtools'
+  tag: 'app-devtools',
 })
 export class AppDevtools {
   @State() internalProps: any = {
@@ -15,12 +27,12 @@ export class AppDevtools {
     const footer = store.get('footer');
     const page = store.get('page');
     const blogpost = store.get('blogpost');
-    const jsonData = { header, footer };
+    let jsonData = { header, footer };
     page && (jsonData['page'] = page);
     blogpost && (jsonData['blog_post'] = blogpost);
-
+    jsonData = filterObject(jsonData);
     this.internalProps = {
-      jsonData: JSON.stringify(jsonData)
+      jsonData: JSON.stringify(jsonData),
     };
   }
 
@@ -39,7 +51,6 @@ export class AppDevtools {
             </div>
             <div class="modal-body">
               <json-viewer id="jsonViewer">{jsonData}</json-viewer>
-              {/* <pre id="jsonViewer"></pre> */}
             </div>
           </div>
         </div>

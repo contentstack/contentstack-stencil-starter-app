@@ -429,3 +429,9 @@ html {
   /* Search highlight color */
   --highlight-color: #6fb3d2;
 }
+
+#jsonViewer span .string{
+  white-space: nowrap !important; 
+  overflow: hidden !important;
+  text-overflow: ellipsis !important; 
+}
