@@ -7,6 +7,7 @@ import moment from 'moment';
 import { parse } from '@saasquatch/stencil-html-parser';
 import Helmet from '@stencil/helmet';
 import { metaData } from '../../utils/common';
+import store from '../../store/state';
 
 @Component({
   tag: 'app-blog',
@@ -26,6 +27,8 @@ export class AppBlog {
     try {
       const blog = await Stack.getEntryByUrl('page', '/blog', ['page_components.from_blog.featured_blogs']);
       const result = await Stack.getEntry('blog_post', ['author', 'related_post']);
+      store.set('page', blog[0]);
+      store.set('blogpost', result[0]);
 
       let archived = [],
         blogList = [];
@@ -52,6 +55,7 @@ export class AppBlog {
     return (
       <div>
         <Helmet>{blog.seo && blog.seo.enable_search_indexing ? metaData(blog.seo) : null}</Helmet>
+        <app-devtools />
         {blog.page_components && <RenderComponents pageComponents={blog.page_components} blogsPage />}
 
         <div class="blog-container">

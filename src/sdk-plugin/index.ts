@@ -4,12 +4,12 @@ const Stack = contentstack.Stack(
   process.env.CONTENTSTACK_API_KEY,
   process.env.CONTENTSTACK_DELIVERY_KEY,
   process.env.CONTENTSTACK_ENVIRONMENT,
-  process.env.CONTENTSTACK_REGION ? process.env.CONTENTSTACK_REGION : ""
+  process.env.CONTENTSTACK_REGION ? process.env.CONTENTSTACK_REGION : "us"
 );
 
-if (process.env.CONTENTSTACK_CUSTOM_HOST) {
-  Stack.setHost(process.env.CONTENTSTACK_CUSTOM_HOST);
-}
+// if (process.env.CONTENTSTACK_CUSTOM_HOST) {
+//   Stack.setHost(process.env.CONTENTSTACK_CUSTOM_HOST);
+// }
 
 export default {
   /**
