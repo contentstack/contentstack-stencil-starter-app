@@ -4,8 +4,7 @@ import Stack from '../../sdk-plugin/index';
 import store from '../../store/state';
 
 @Component({
-  tag: 'app-footer',
-  styleUrl: 'app-footer.css',
+  tag: 'app-footer'
 })
 export class AppFooter {
   @State() internalProps: any = {
