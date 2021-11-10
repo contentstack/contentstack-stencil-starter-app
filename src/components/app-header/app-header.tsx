@@ -34,7 +34,7 @@ export class AppHeader {
         <div class="note-div">
           {header.notification_bar.show_announcement && parse(header.notification_bar.announcement_text)}
           <span class="devtools" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-            <i class="fas fa-tools fa-lg" />
+            <img src="../../assets/Devools.gif" alt="Dev tools icon" title="Json Preview"/>
           </span>
         </div>
         <div class="max-width header-div">
