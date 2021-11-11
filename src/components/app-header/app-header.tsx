@@ -1,6 +1,7 @@
 import { Component, State, h } from '@stencil/core';
 import { parse } from '@saasquatch/stencil-html-parser';
 import Stack from '../../sdk-plugin/index';
+import store from '../../store/state';
 
 @Component({
   tag: 'app-header',
@@ -8,16 +9,17 @@ import Stack from '../../sdk-plugin/index';
 })
 export class AppHeader {
   @State() internalProps: any = {
-    header: {}
+    header: {},
   };
   @State() error: any;
 
   async componentWillLoad() {
     try {
       const header = await Stack.getEntry('header', 'navigation_menu.page_reference');
+      store.set('header', header[0][0]);
 
       this.internalProps = {
-        header: header[0][0]
+        header: header[0][0],
       };
     } catch (error) {
       this.error = { notFound: true };
@@ -29,7 +31,12 @@ export class AppHeader {
 
     return (
       <header class="header">
-        {header.notification_bar && header.notification_bar.show_announcement ? <div class="note-div">{parse(header.notification_bar.announcement_text)}</div> : ''}
+        <div class="note-div">
+          {header.notification_bar.show_announcement && parse(header.notification_bar.announcement_text)}
+          <span class="devtools" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            <img src="../../assets/Devools.gif" alt="Dev tools icon" title="Json Preview"/>
+          </span>
+        </div>
         <div class="max-width header-div">
           <div class="wrapper-logo">
             <a href="/" class="logo-tag" title="Contentstack">
@@ -44,7 +51,7 @@ export class AppHeader {
             <ul class="nav-ul header-ul">
               {header.navigation_menu?.map(list => (
                 <li key={list.label} class="nav-li">
-                  <stencil-route-link 
+                  <stencil-route-link
                     url={list.page_reference[0].url}
                     activeClass={'active'}
                     // anchorClass={window.location.pathname === list.page_reference[0].url ? 'active' : 'home'}
