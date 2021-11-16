@@ -1,10 +1,10 @@
 import contentstack from 'contentstack';
 
 const Stack = contentstack.Stack(
-  process.env.API_KEY,
-  process.env.DELIVERY_KEY,
-  process.env.ENVIRONMENT,
-  process.env.REGION ? process.env.REGION : "us"
+  process.env.CONTENTSTACK_API_KEY,
+  process.env.CONTENTSTACK_DELIVERY_TOKEN,
+  process.env.CONTENTSTACK_ENVIRONMENT,
+  process.env.CONTENTSTACK_REGION ? process.env.CONTENTSTACK_REGION : "us"
 );
 
 // if (process.env.CUSTOM_HOST) {
