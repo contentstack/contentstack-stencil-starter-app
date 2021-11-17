@@ -7,10 +7,6 @@ const Stack = contentstack.Stack(
   process.env.CONTENTSTACK_REGION ? process.env.CONTENTSTACK_REGION : "us"
 );
 
-// if (process.env.CUSTOM_HOST) {
-//   Stack.setHost(process.env.CUSTOM_HOST);
-// }
-
 export default {
   /**
    *
