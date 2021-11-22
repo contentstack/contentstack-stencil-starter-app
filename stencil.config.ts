@@ -1,12 +1,16 @@
 import { Config } from '@stencil/core';
 import dotenvPlugin from 'rollup-plugin-dotenv';
-
-// https://stenciljs.com/docs/config
+import fs from 'fs';
 
 export const config: Config = {
-  plugins: [
-    dotenvPlugin()
-  ],
+
+  plugins: fs.existsSync('./.env') ? [dotenvPlugin()] : [],
+  env: !fs.existsSync('./.env') ? {
+    CONTENTSTACK_API_KEY: process.env.CONTENTSTACK_API_KEY,
+    CONTENTSTACK_DELIVERY_TOKEN: process.env.CONTENTSTACK_DELIVERY_TOKEN,
+    CONTENTSTACK_ENVIRONMENT: process.env.CONTENTSTACK_ENVIRONMENT,
+    CONTENTSTACK_REGION: process.env.CONTENTSTACK_REGION || "us"
+  } : {},
   globalStyle: 'src/global/app.css',
   globalScript: 'src/global/app.ts',
   taskQueue: 'async',

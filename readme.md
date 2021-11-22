@@ -10,13 +10,13 @@ About this project: Stencil.js is a minimalistic framework for server-rendered R
 
 ## Live Demo
 
-You can check the [live demo](https://stencil-js-starter-app.vercel.app/) to get first-hand experience of the website.
+You can check the [live demo](https://contentstack-stencil-starter-app.vercel.app/) to get first-hand experience of the website.
 
 ## Tutorial
 
 We have created an in-depth tutorial on how you can create a stencil.js starter website using Contentstack's Node.js SDK and its fetch content from Contentstack.
 
-[Build Website using Stencil.js and Contentstack](https://www.contentstack.com/docs/developers/sample-apps/build-a-starter-website-using-stencil-js-and-contentstack/)
+[Build Website using Stencil.js and Contentstack](https://www.contentstack.com/docs/developers/sample-apps/build-a-starter-website-with-stenciljs-and-contentstack/)
 
 **More Resources**
 
