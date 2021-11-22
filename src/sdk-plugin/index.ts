@@ -12,7 +12,6 @@ const Stack = Object.keys(Env).length > 0 ? contentstack.Stack(
   process.env.CONTENTSTACK_ENVIRONMENT,
   process.env.CONTENTSTACK_REGION
 )
-console.log("stack",Stack);
 
 export default {
   /**
