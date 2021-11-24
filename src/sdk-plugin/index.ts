@@ -1,4 +1,5 @@
 import contentstack from 'contentstack';
+import * as Utils from "@contentstack/utils";
 
 const Stack = contentstack.Stack(
   process.env.CONTENTSTACK_API_KEY,
@@ -7,9 +8,11 @@ const Stack = contentstack.Stack(
   process.env.CONTENTSTACK_REGION ? process.env.CONTENTSTACK_REGION : "us"
 );
 
-// if (process.env.CONTENTSTACK_CUSTOM_HOST) {
-//   Stack.setHost(process.env.CONTENTSTACK_CUSTOM_HOST);
-// }
+const renderOption = {
+  ["span"]: (node, next) => {
+    return next(node.children);
+  },
+};
 
 export default {
   /**
@@ -19,7 +22,7 @@ export default {
    * @param {* reference field name} referenceFieldPath
    *
    */
-  getEntry(contentTypeUid, referenceFieldPath) {
+  getEntry({ contentTypeUid, referenceFieldPath, jsonRtePath }) {
     return new Promise((resolve, reject) => {
       const query = Stack.ContentType(contentTypeUid).Query();
       if (referenceFieldPath) query.includeReference(referenceFieldPath);
@@ -29,6 +32,13 @@ export default {
         .find()
         .then(
           result => {
+            jsonRtePath &&
+              Utils.jsonToHTML({
+                entry: result,
+                paths: jsonRtePath,
+                renderOption,
+              });
+            resolve(result);
             resolve(result);
           },
           error => {
@@ -46,7 +56,7 @@ export default {
    * @param {* reference field name} referenceFieldPath
    * @returns
    */
-  getEntryByUrl(contentTypeUid, entryUrl, referenceFieldPath) {
+  getEntryByUrl({ contentTypeUid, entryUrl, referenceFieldPath, jsonRtePath }) {
     return new Promise((resolve, reject) => {
       const blogQuery = Stack.ContentType(contentTypeUid).Query();
       if (referenceFieldPath) blogQuery.includeReference(referenceFieldPath);
@@ -54,6 +64,12 @@ export default {
       const data = blogQuery.where('url', `${entryUrl}`).find();
       data.then(
         result => {
+          jsonRtePath &&
+            Utils.jsonToHTML({
+              entry: result,
+              paths: jsonRtePath,
+              renderOption,
+            });
           resolve(result[0]);
         },
         error => {

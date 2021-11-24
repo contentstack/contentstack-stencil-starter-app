@@ -17,10 +17,15 @@ export class AppContact {
 
   async componentWillLoad() {
     try {
-      const result = await Stack.getEntryByUrl('page', '/contact-us', ['page_components.from_blog.featured_blogs']);
+      const result = await Stack.getEntryByUrl({
+        contentTypeUid: 'page',
+        entryUrl: '/contact-us',
+        referenceFieldPath: ['page_components.from_blog.featured_blogs'],
+        jsonRtePath: ['page_components.section_with_html_code.description'],
+      });
       store.set('page', result[0]);
       store.set('blogpost', null);
-      
+
       this.internalProps = {
         result: result[0],
       };
