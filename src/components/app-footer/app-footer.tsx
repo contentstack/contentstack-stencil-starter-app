@@ -4,7 +4,7 @@ import Stack from '../../sdk-plugin/index';
 import store from '../../store/state';
 
 @Component({
-  tag: 'app-footer',
+  tag: 'app-footer'
 })
 export class AppFooter {
   @State() internalProps: any = {
@@ -14,14 +14,10 @@ export class AppFooter {
 
   async componentWillLoad() {
     try {
-      const footer = await Stack.getEntry({
-        contentTypeUid: 'footer',
-        referenceFieldPath: '',
-        jsonRtePath: ['copyright'],
-      });
+      const footer = await Stack.getEntry('footer', '');
       store.set('footer', footer[0][0]);
       this.internalProps = {
-        footer: footer[0][0],
+        footer: footer[0][0]
       };
     } catch (error) {
       this.error = { notFound: true };

@@ -17,12 +17,7 @@ export class AppAbout {
 
   async componentWillLoad() {
     try {
-      const result = await Stack.getEntryByUrl({
-        contentTypeUid: 'page',
-        entryUrl: '/about-us',
-        referenceFieldPath: [],
-        jsonRtePath: ['page_components.section_with_buckets.buckets.description'],
-      });
+      const result = await Stack.getEntryByUrl('page', '/about-us', []);
       store.set('page', result[0]);
       store.set('blogpost', null);
 

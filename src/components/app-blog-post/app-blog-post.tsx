@@ -25,21 +25,11 @@ export class AppBlogPost {
   async componentWillLoad() {
     const blogId = this.match && this.match.params.id;
     try {
-      const banner = await Stack.getEntryByUrl({
-        contentTypeUid: 'page',
-        entryUrl: '/blog',
-        referenceFieldPath: [],
-        jsonRtePath: [],
-      });
-      const blog = await Stack.getEntryByUrl({
-        contentTypeUid: 'blog_post',
-        entryUrl: `/blog/${blogId}`,
-        referenceFieldPath: ['author', 'related_post'],
-        jsonRtePath: ['body', 'related_post.body'],
-      });
+      const banner = await Stack.getEntryByUrl('page', '/blog', []);
+      const blog = await Stack.getEntryByUrl('blog_post', `/blog/${blogId}`, ['author', 'related_post']);
       store.set('page', banner[0]);
       store.set('blogpost', blog[0]);
-
+      
       this.internalProps = {
         result: blog[0],
         banner: banner[0],
