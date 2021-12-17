@@ -1,15 +1,17 @@
 import contentstack from 'contentstack';
+import { Env } from '@stencil/core';
 
-const Stack = contentstack.Stack(
+const Stack = Object.keys(Env).length > 0 ? contentstack.Stack(
+  Env.CONTENTSTACK_API_KEY,
+  Env.CONTENTSTACK_DELIVERY_TOKEN,
+  Env.CONTENTSTACK_ENVIRONMENT,
+  Env.CONTENTSTACK_REGION
+): contentstack.Stack(
   process.env.CONTENTSTACK_API_KEY,
-  process.env.CONTENTSTACK_DELIVERY_KEY,
+  process.env.CONTENTSTACK_DELIVERY_TOKEN,
   process.env.CONTENTSTACK_ENVIRONMENT,
-  process.env.CONTENTSTACK_REGION ? process.env.CONTENTSTACK_REGION : "us"
-);
-
-// if (process.env.CONTENTSTACK_CUSTOM_HOST) {
-//   Stack.setHost(process.env.CONTENTSTACK_CUSTOM_HOST);
-// }
+  process.env.CONTENTSTACK_REGION
+)
 
 export default {
   /**
