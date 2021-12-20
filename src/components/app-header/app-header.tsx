@@ -15,7 +15,11 @@ export class AppHeader {
 
   async componentWillLoad() {
     try {
-      const header = await Stack.getEntry('header', 'navigation_menu.page_reference');
+      const header = await Stack.getEntry({
+        contentTypeUid: 'header',
+        referenceFieldPath: 'navigation_menu.page_reference',
+        jsonRtePath: ['notification_bar.announcement_text'],
+      });
       store.set('header', header[0][0]);
 
       this.internalProps = {
@@ -34,7 +38,7 @@ export class AppHeader {
         <div class="note-div">
           {header.notification_bar.show_announcement && parse(header.notification_bar.announcement_text)}
           <span class="devtools" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-            <img src="../../assets/Devools.gif" alt="Dev tools icon" title="Json Preview"/>
+            <img src="../../assets/Devools.gif" alt="Dev tools icon" title="Json Preview" />
           </span>
         </div>
         <div class="max-width header-div">
@@ -54,7 +58,6 @@ export class AppHeader {
                   <stencil-route-link
                     url={list.page_reference[0].url}
                     activeClass={'active'}
-                    // anchorClass={window.location.pathname === list.page_reference[0].url ? 'active' : 'home'}
                   >
                     {list.label}
                   </stencil-route-link>
