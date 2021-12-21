@@ -25,8 +25,8 @@ export class AppBlog {
 
   async componentWillLoad() {
     try {
-      const blog = await Stack.getEntryByUrl('page', '/blog', ['page_components.from_blog.featured_blogs']);
-      const result = await Stack.getEntry('blog_post', ['author', 'related_post']);
+      const blog = await Stack.getEntryByUrl({ contentTypeUid: 'page', entryUrl: '/blog', referenceFieldPath: ['page_components.from_blog.featured_blogs'], jsonRtePath: [] });
+      const result = await Stack.getEntry({ contentTypeUid: 'blog_post', referenceFieldPath: ['author', 'related_post'], jsonRtePath: ['body'] });
       store.set('page', blog[0]);
       store.set('blogpost', result[0]);
 
