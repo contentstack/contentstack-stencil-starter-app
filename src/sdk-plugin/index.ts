@@ -11,8 +11,8 @@ const Stack = Object.keys(Env).length > 0 ? contentstack.Stack(
   process.env.CONTENTSTACK_DELIVERY_TOKEN,
   process.env.CONTENTSTACK_ENVIRONMENT
 );
-Object.keys(Env).length > 0 && process.env.CONTENTSTACK_API_HOST &&
-Stack.setHost(process.env.CONTENTSTACK_API_HOST)
+Object.keys(Env).length > 0 ? Stack.setHost(process.env.CONTENTSTACK_API_HOST) : process.env.CONTENTSTACK_API_HOST &&
+  Stack.setHost(process.env.CONTENTSTACK_API_HOST)
 
 const renderOption = {
   ["span"]: (node, next) => {
