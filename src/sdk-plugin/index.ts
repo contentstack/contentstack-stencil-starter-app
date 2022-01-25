@@ -2,17 +2,12 @@ import contentstack from 'contentstack';
 import * as Utils from "@contentstack/utils";
 import { Env } from '@stencil/core';
 
-const Stack = Object.keys(Env).length > 0 ? contentstack.Stack(
+const Stack = Object.keys(Env).length > 0 && contentstack.Stack(
   Env.CONTENTSTACK_API_KEY,
   Env.CONTENTSTACK_DELIVERY_TOKEN,
   Env.CONTENTSTACK_ENVIRONMENT
-) : contentstack.Stack(
-  process.env.CONTENTSTACK_API_KEY,
-  process.env.CONTENTSTACK_DELIVERY_TOKEN,
-  process.env.CONTENTSTACK_ENVIRONMENT
-);
-Object.keys(Env).length > 0 ? Stack.setHost(process.env.CONTENTSTACK_API_HOST) : process.env.CONTENTSTACK_API_HOST &&
-  Stack.setHost(process.env.CONTENTSTACK_API_HOST)
+)
+Object.keys(Env).length > 0 && Stack.setHost(Env.CONTENTSTACK_API_HOST)
 
 const renderOption = {
   ["span"]: (node, next) => {
