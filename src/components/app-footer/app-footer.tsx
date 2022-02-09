@@ -1,7 +1,19 @@
 import { Component, State, h } from '@stencil/core';
 import { parse } from '@saasquatch/stencil-html-parser';
-import Stack from '../../sdk-plugin/index';
+import Stack, { onEntryChange } from '../../sdk-plugin/index';
 import store from '../../store/state';
+
+const fetchEntries = () => {
+  try {
+    return Stack.getEntry({
+      contentTypeUid: 'footer',
+      referenceFieldPath: '',
+      jsonRtePath: ['copyright'],
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 @Component({
   tag: 'app-footer',
@@ -14,17 +26,28 @@ export class AppFooter {
 
   async componentWillLoad() {
     try {
-      const footer = await Stack.getEntry({
-        contentTypeUid: 'footer',
-        referenceFieldPath: '',
-        jsonRtePath: ['copyright'],
-      });
-      store.set('footer', footer[0][0]);
-      this.internalProps = {
-        footer: footer[0][0],
-      };
+        const footer = await fetchEntries();
+        store.set('footer', footer[0][0]);
+        this.internalProps = {
+          footer: footer[0][0],
+        };
     } catch (error) {
       this.error = { notFound: true };
+    }
+  }
+
+  componentDidLoad() {
+    try {
+      onEntryChange(async () => {
+        const footer = await fetchEntries();
+        store.set('footer', footer[0][0]);
+
+        this.internalProps = {
+          footer: footer[0][0],
+        };
+      });
+    } catch (error) {
+      console.error(error);
     }
   }
 
@@ -36,13 +59,13 @@ export class AppFooter {
         <div class="max-width footer-div">
           <div class="col-quarter">
             <a href="/" class="logo-tag">
-              <img src={footer.logo.url} alt={footer.title} title={footer.title} class="logo footer-logo" />
+              <img src={footer.logo?.url} alt={footer?.title} title={footer?.title} class="logo footer-logo" />
             </a>
           </div>
           <div class="col-half">
             <nav>
               <ul class="nav-ul">
-                {footer.navigation.link?.map(menu => (
+                {footer.navigation?.link.map(menu => (
                   <li class="footer-nav-li" key={menu.title}>
                     <stencil-route-link url={menu.href}>{menu.title}</stencil-route-link>
                   </li>
@@ -52,7 +75,7 @@ export class AppFooter {
           </div>
           <div class="col-quarter social-link">
             <div class="social-nav">
-              {footer.social.social_share?.map(social => (
+              {footer.social?.social_share.map(social => (
                 <a href={social.link.href} title={social.link.title} key={social.link.title}>
                   {social.icon && <img src={social.icon.url} alt={social.link.title} />}
                 </a>
