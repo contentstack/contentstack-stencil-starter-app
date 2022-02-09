@@ -28,6 +28,7 @@
   "license": "MIT",
   "dependencies": {
     "@alenaksu/json-viewer": "^0.3.4",
+    "@contentstack/live-preview-utils": "^1.0.1",
     "@contentstack/utils": "^1.1.1",
     "@saasquatch/stencil-html-parser": "^1.0.2",
     "@stencil/eslint-plugin": "^0.3.1",
