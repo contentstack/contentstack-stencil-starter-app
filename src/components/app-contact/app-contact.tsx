@@ -1,9 +1,22 @@
 import { Component, h, State } from '@stencil/core';
-import Stack from '../../sdk-plugin/index';
+import Stack, { onEntryChange } from '../../sdk-plugin/index';
 import RenderComponents from '../render-components';
 import Helmet from '@stencil/helmet';
 import { metaData } from '../../utils/common';
 import store from '../../store/state';
+
+const fetchEntries = () => {
+  try {
+    return Stack.getEntryByUrl({
+      contentTypeUid: 'page',
+      entryUrl: '/contact-us',
+      referenceFieldPath: ['page_components.from_blog.featured_blogs'],
+      jsonRtePath: ['page_components.section_with_html_code.description'],
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 @Component({
   tag: 'app-contact',
@@ -17,20 +30,31 @@ export class AppContact {
 
   async componentWillLoad() {
     try {
-      const result = await Stack.getEntryByUrl({
-        contentTypeUid: 'page',
-        entryUrl: '/contact-us',
-        referenceFieldPath: ['page_components.from_blog.featured_blogs'],
-        jsonRtePath: ['page_components.section_with_html_code.description'],
-      });
-      store.set('page', result[0]);
-      store.set('blogpost', null);
+        const result = await fetchEntries();
+        store.set('page', result[0]);
+        store.set('blogpost', null);
 
-      this.internalProps = {
-        result: result[0],
-      };
+        this.internalProps = {
+          result: result[0],
+        };
     } catch (error) {
       this.error = { notFound: true };
+    }
+  }
+
+  componentDidLoad() {
+    try {
+      onEntryChange(async () => {
+        const result = await fetchEntries();
+        store.set('page', result[0]);
+        store.set('blogpost', null);
+
+        this.internalProps = {
+          result: result[0],
+        };
+      });
+    } catch (error) {
+      console.error(error);
     }
   }
 

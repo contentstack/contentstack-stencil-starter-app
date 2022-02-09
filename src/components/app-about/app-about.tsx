@@ -1,10 +1,22 @@
 import { Component, h, State } from '@stencil/core';
-import Stack from '../../sdk-plugin/index';
+import Stack, { onEntryChange } from '../../sdk-plugin/index';
 import RenderComponents from '../render-components';
 import Helmet from '@stencil/helmet';
 import { metaData } from '../../utils/common';
 import store from '../../store/state';
 
+const fetchEntries = () => {
+  try {
+    return Stack.getEntryByUrl({
+      contentTypeUid: 'page',
+      entryUrl: '/about-us',
+      referenceFieldPath: [],
+      jsonRtePath: ['page_components.section_with_buckets.buckets.description'],
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
 @Component({
   tag: 'app-about',
   styleUrl: 'app-about.css',
@@ -17,12 +29,7 @@ export class AppAbout {
 
   async componentWillLoad() {
     try {
-      const result = await Stack.getEntryByUrl({
-        contentTypeUid: 'page',
-        entryUrl: '/about-us',
-        referenceFieldPath: [],
-        jsonRtePath: ['page_components.section_with_buckets.buckets.description'],
-      });
+      const result = await fetchEntries();
       store.set('page', result[0]);
       store.set('blogpost', null);
 
@@ -31,6 +38,21 @@ export class AppAbout {
       };
     } catch (error) {
       this.error = { notFound: true };
+    }
+  }
+
+  componentDidLoad() {
+    try {
+      onEntryChange(async () => {
+        const result = await fetchEntries();
+        store.set('page', result[0]);
+        store.set('blogpost', null);
+        this.internalProps = {
+          result: result[0],
+        };
+      });
+    } catch (error) {
+      console.error(error);
     }
   }
 
