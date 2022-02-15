@@ -1,6 +1,6 @@
 import { Component, Prop, h, State } from '@stencil/core';
 import { MatchResults } from '@stencil/router';
-import Stack from '../../sdk-plugin/index';
+import Stack, { onEntryChange } from '../../sdk-plugin/index';
 import RenderComponents from '../../components/render-components';
 import ArchiveRelative from '../../components/archive-relative';
 import moment from 'moment';
@@ -8,6 +8,26 @@ import { parse } from '@saasquatch/stencil-html-parser';
 import Helmet from '@stencil/helmet';
 import { metaData } from '../../utils/common';
 import store from '../../store/state';
+
+const fetchEntries = async blogId => {
+  try {
+    const banner = await Stack.getEntryByUrl({
+      contentTypeUid: 'page',
+      entryUrl: '/blog',
+      referenceFieldPath: [],
+      jsonRtePath: [],
+    });
+    const blog = await Stack.getEntryByUrl({
+      contentTypeUid: 'blog_post',
+      entryUrl: `/blog/${blogId}`,
+      referenceFieldPath: ['author', 'related_post'],
+      jsonRtePath: ['body', 'related_post.body'],
+    });
+    return [banner, blog];
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 @Component({
   tag: 'app-blog-post',
@@ -25,18 +45,8 @@ export class AppBlogPost {
   async componentWillLoad() {
     const blogId = this.match && this.match.params.id;
     try {
-      const banner = await Stack.getEntryByUrl({
-        contentTypeUid: 'page',
-        entryUrl: '/blog',
-        referenceFieldPath: [],
-        jsonRtePath: [],
-      });
-      const blog = await Stack.getEntryByUrl({
-        contentTypeUid: 'blog_post',
-        entryUrl: `/blog/${blogId}`,
-        referenceFieldPath: ['author', 'related_post'],
-        jsonRtePath: ['body', 'related_post.body'],
-      });
+      const [banner, blog] = await fetchEntries(blogId);
+
       store.set('page', banner[0]);
       store.set('blogpost', blog[0]);
 
@@ -47,6 +57,24 @@ export class AppBlogPost {
     } catch (error) {
       console.error(error);
       this.error = { notFound: true };
+    }
+  }
+
+  componentDidLoad() {
+    const blogId = this.match && this.match.params.id;
+    try {
+      onEntryChange(async () => {
+        const [banner, blog] = await fetchEntries(blogId);
+        store.set('page', banner[0]);
+        store.set('blogpost', blog[0]);
+
+        this.internalProps = {
+          result: blog[0],
+          banner: banner[0],
+        };
+      });
+    } catch (error) {
+      console.error(error);
     }
   }
 

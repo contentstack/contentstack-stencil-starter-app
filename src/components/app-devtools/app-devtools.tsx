@@ -34,23 +34,46 @@ export class AppDevtools {
     this.internalProps = {
       jsonData: JSON.stringify(jsonData),
     };
+    const element = document.getElementsByClassName('cslp-tooltip')
+    if (element.length > 0) {
+      element[0].outerHTML = null
+    }
   }
 
   render() {
     const { jsonData } = this.internalProps;
 
+    function copyObject(object) {
+      const tipValue = document.getElementById('copyTip').dataset;
+      tipValue.tip = 'Copied';
+
+      navigator.clipboard.writeText(JSON.stringify(object));
+      setTimeout(() => {
+        tipValue.tip = 'Copy';
+      }, 300);
+    }
     return (
       <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog .modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h2 class="modal-title" id="staticBackdropLabel">
-                Json Response
+                JSON Preview
               </h2>
+              <span class="json-copy" onClick={() => copyObject(JSON.parse(jsonData))} aria-hidden="true">
+                <span class="tool-tip tool-tip-copy" id="copyTip" data-tip="Copy" tabindex="1">
+                  <img src="../../assets/copy.svg" alt="copy icon" />
+                </span>
+              </span>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <json-viewer id="jsonViewer">{jsonData}</json-viewer>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn tertiary-btn modal-btn" data-bs-dismiss="modal">
+                Close
+              </button>
             </div>
           </div>
         </div>
