@@ -1,6 +1,6 @@
 import { Component, Prop, h, State } from '@stencil/core';
 import { MatchResults } from '@stencil/router';
-import Stack from '../../sdk-plugin/index';
+import Stack, { onEntryChange } from '../../sdk-plugin/index';
 import RenderComponents from '../../components/render-components';
 import ArchiveRelative from '../../components/archive-relative';
 import moment from 'moment';
@@ -8,6 +8,17 @@ import { parse } from '@saasquatch/stencil-html-parser';
 import Helmet from '@stencil/helmet';
 import { metaData } from '../../utils/common';
 import store from '../../store/state';
+
+const fetchEntries = async () => {
+  try {
+    const blog = await Stack.getEntryByUrl({ contentTypeUid: 'page', entryUrl: '/blog', referenceFieldPath: ['page_components.from_blog.featured_blogs'], jsonRtePath: [] });
+    const result = await Stack.getEntry({ contentTypeUid: 'blog_post', referenceFieldPath: ['author', 'related_post'], jsonRtePath: ['body'] });
+
+    return [blog, result];
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 @Component({
   tag: 'app-blog',
@@ -25,8 +36,7 @@ export class AppBlog {
 
   async componentWillLoad() {
     try {
-      const blog = await Stack.getEntryByUrl({ contentTypeUid: 'page', entryUrl: '/blog', referenceFieldPath: ['page_components.from_blog.featured_blogs'], jsonRtePath: [] });
-      const result = await Stack.getEntry({ contentTypeUid: 'blog_post', referenceFieldPath: ['author', 'related_post'], jsonRtePath: ['body'] });
+      const [blog, result] = await fetchEntries();  
       store.set('page', blog[0]);
       store.set('blogpost', result[0]);
 
@@ -47,6 +57,33 @@ export class AppBlog {
     } catch (error) {
       console.error(error);
       this.error = { notFound: true };
+    }
+  }
+
+  componentDidLoad() {
+    try {
+      onEntryChange(async () => {
+        const [blog, result] = await fetchEntries();
+        store.set('page', blog[0]);
+        store.set('blogpost', result[0]);
+
+        let archived = [],
+          blogList = [];
+        result[0].forEach(blogs => {
+          if (blogs.is_archived) {
+            archived.push(blogs);
+          } else {
+            blogList.push(blogs);
+          }
+        });
+        this.internalProps = {
+          blog: blog[0],
+          blogList,
+          archived,
+        };
+      });
+    } catch (error) {
+      console.error(error);
     }
   }
 

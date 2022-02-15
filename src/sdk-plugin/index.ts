@@ -1,24 +1,57 @@
 import contentstack from 'contentstack';
 import * as Utils from "@contentstack/utils";
 import { Env } from '@stencil/core';
+import ContentstackLivePreview from '@contentstack/live-preview-utils';
 
-const Stack = Object.keys(Env).length > 0 ? contentstack.Stack(
-  Env.CONTENTSTACK_API_KEY,
-  Env.CONTENTSTACK_DELIVERY_TOKEN,
-  Env.CONTENTSTACK_ENVIRONMENT,
-  Env.CONTENTSTACK_REGION
-): contentstack.Stack(
-  process.env.CONTENTSTACK_API_KEY,
-  process.env.CONTENTSTACK_DELIVERY_TOKEN,
-  process.env.CONTENTSTACK_ENVIRONMENT,
-  process.env.CONTENTSTACK_REGION ? process.env.CONTENTSTACK_REGION : "us"
-);
+let stackConfig, hostUrl;
+if (Object.keys(Env).length > 0) {
+  stackConfig = {
+    api_key: Env.CONTENTSTACK_API_KEY,
+    delivery_token: Env.CONTENTSTACK_DELIVERY_TOKEN,
+    environment: Env.CONTENTSTACK_ENVIRONMENT,
+    live_preview: {
+      host: Env.CONTENTSTACK_API_HOST,
+      enable: Env.CONTENTSTACK_LIVE_PREVIEW === "true",
+      management_token: Env.CONTENTSTACK_MANAGEMENT_TOKEN
+    },
+    clientUrlParams: {
+      host: Env.CONTENTSTACK_APP_HOST
+    }
+  }
+  hostUrl = Env.CONTENTSTACK_API_HOST;
+} else {
+  stackConfig = {
+    api_key: process.env.CONTENTSTACK_API_KEY,
+    delivery_token: process.env.CONTENTSTACK_DELIVERY_TOKEN,
+    environment: process.env.CONTENTSTACK_ENVIRONMENT,
+    live_preview: {
+      host: process.env.CONTENTSTACK_API_HOST,
+      enable: process.env.CONTENTSTACK_LIVE_PREVIEW === "true",
+      management_token: process.env.CONTENTSTACK_MANAGEMENT_TOKEN
+    },
+    clientUrlParams: {
+      host: process.env.CONTENTSTACK_APP_HOST
+    }
+  }
+  hostUrl = process.env.CONTENTSTACK_API_HOST;
+}
+
+const Stack = contentstack.Stack(stackConfig)
+Stack.setHost(hostUrl)
+
+ContentstackLivePreview.init({
+  ssr: false,
+  //@ts-ignore
+  stackSdk: Stack
+})
 
 const renderOption = {
   ["span"]: (node, next) => {
     return next(node.children);
   },
 };
+
+export const onEntryChange = ContentstackLivePreview.onEntryChange
 
 export default {
   /**
