@@ -18,36 +18,35 @@ function filterObject(inputObject) {
   tag: 'app-devtools',
 })
 export class AppDevtools {
-  @State() internalProps: any = {
-    jsonData: {},
-  };
+  // @Prop() page: any;
+  // @Prop() blogpost: any;
+  // @Prop() blogList: any;
+  @State() jsonData: any = { header: {}, footer: {}, page: {}, blogpost: {} };
 
-  componentWillRender() {
+  componentDidLoad() {
     const header = store.get('header');
     const footer = store.get('footer');
     const page = store.get('page');
     const blogpost = store.get('blogpost');
+    const blogList = store.get('blogList');
     let jsonData = { header, footer };
     page && (jsonData['page'] = page);
-    blogpost && (jsonData['blog_post'] = blogpost);
+    blogpost && (jsonData['blogPost'] = blogpost);
+    blogList && (jsonData['blogList'] = blogList);
     jsonData = filterObject(jsonData);
-    this.internalProps = {
-      jsonData: JSON.stringify(jsonData),
-    };
-    const element = document.getElementsByClassName('cslp-tooltip')
+    this.jsonData = JSON.stringify(jsonData);
+    const element = document.getElementsByClassName('cslp-tooltip');
     if (element.length > 0) {
-      element[0].outerHTML = null
+      element[0].outerHTML = null;
     }
   }
 
   render() {
-    const { jsonData } = this.internalProps;
-
     function copyObject(object) {
       const tipValue = document.getElementById('copyTip').dataset;
       tipValue.tip = 'Copied';
 
-      navigator.clipboard.writeText(JSON.stringify(object));
+      navigator.clipboard.writeText(object);
       setTimeout(() => {
         tipValue.tip = 'Copy';
       }, 300);
@@ -60,7 +59,7 @@ export class AppDevtools {
               <h2 class="modal-title" id="staticBackdropLabel">
                 JSON Preview
               </h2>
-              <span class="json-copy" onClick={() => copyObject(JSON.parse(jsonData))} aria-hidden="true">
+              <span class="json-copy" onClick={() => copyObject(this.jsonData)} aria-hidden="true">
                 <span class="tool-tip tool-tip-copy" id="copyTip" data-tip="Copy" tabindex="1">
                   <img src="../../assets/copy.svg" alt="copy icon" />
                 </span>
@@ -68,7 +67,7 @@ export class AppDevtools {
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <json-viewer id="jsonViewer">{jsonData}</json-viewer>
+              <json-viewer id="jsonViewer">{this.jsonData}</json-viewer>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn tertiary-btn modal-btn" data-bs-dismiss="modal">

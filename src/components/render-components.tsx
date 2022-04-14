@@ -11,25 +11,21 @@ import AboutSectionBucket from './about-section-bucket';
 import SectionWithHtmlCode from './section-with-html-code';
 
 export default function RenderComponents(props) {
-  const { pageComponents, blogsPage, about } = props;
+  const { pageComponents, blogsPage } = props;
   return (
     <Fragment>
       {pageComponents?.map((component: any, key: any) => {
         if (component.hero_banner) {
-          return blogsPage ? (
-            <BlogBanner blog_banner={component.hero_banner} key={`component-${key}`} />
-          ) : (
-            <HeroBanner hero_banner={component.hero_banner} title={about ? 'about' : 'home'} key={`component-${key}`} />
-          );
+          return blogsPage ? <BlogBanner blog_banner={component.hero_banner} key={`component-${key}`} /> : <HeroBanner banner={component.hero_banner} />;
         }
         if (component.section) {
           return <Section section={component.section} key={`component-${key}`} />;
         }
         if (component.section_with_buckets) {
-          return about ? (
+          return component.section_with_buckets.bucket_tabular ? (
             <AboutSectionBucket sectionWithBuckets={component.section_with_buckets} key={`component-${key}`} />
           ) : (
-            <SectionBucket section={component.section_with_buckets} key={`component-${key}`} />
+            <SectionBucket section={component.section_with_buckets} />
           );
         }
         if (component.from_blog) {
