@@ -1,10 +1,11 @@
 import { createStore } from "@stencil/store";
 
 const store = createStore({
-  header: [],
+  header: {},
   footer: {},
   page:{},
-  blogpost:{}
+  blogpost:{},
+  blogList:[],
 });
 
 export default store;
