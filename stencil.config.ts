@@ -11,8 +11,9 @@ export const config: Config = {
     CONTENTSTACK_MANAGEMENT_TOKEN: process.env.CONTENTSTACK_MANAGEMENT_TOKEN,
     CONTENTSTACK_API_HOST: process.env.CONTENTSTACK_API_HOST,
     CONTENTSTACK_APP_HOST: process.env.CONTENTSTACK_APP_HOST,
-    CONTENTSTACK_LIVE_PREVIEW: process.env.CONTENTSTACK_LIVE_PREVIEW
-  }:{},
+    CONTENTSTACK_LIVE_PREVIEW: process.env.CONTENTSTACK_LIVE_PREVIEW,
+    CONTENTSTACK_LIVE_EDIT_TAGS: process.env.CONTENTSTACK_LIVE_EDIT_TAGS
+  } : {},
   globalStyle: 'src/global/app.css',
   globalScript: 'src/global/app.ts',
   taskQueue: 'async',

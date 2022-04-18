@@ -40,8 +40,7 @@ export class AppHome {
     return (
       <div>
         <Helmet>{result.seo && result.seo.enable_search_indexing ? metaData(result.seo) : null}</Helmet>
-        <app-devtools />
-        {/* <app-devtools page={result} blogpost={undefined} blogList={undefined} /> */}
+        {result && <app-devtools page={result}/>}
         {result.page_components && <RenderComponents pageComponents={result.page_components} />}
       </div>
     );
