@@ -30,9 +30,6 @@ export class AppDevtools {
     const blogpost = store.get('blogpost');
     const blogList = store.get('blogList');
     let newJsonData = {};
-    console.log('header...', header);
-    console.log('footer...', footer);
-    console.log('page...', page);
 
     Object.keys(header).length !== 0 && (newJsonData['header'] = header);
     Object.keys(footer).length !== 0 && (newJsonData['footer'] = footer);
@@ -40,7 +37,6 @@ export class AppDevtools {
     Object.keys(blogpost).length !== 0 && (newJsonData['blogPost'] = blogpost);
     Object.keys(blogList).length !== 0 && (newJsonData['blogList'] = blogList);
     newJsonData = filterObject(newJsonData);
-    console.log('json preview', newJsonData);
     this.jsonData = JSON.stringify(newJsonData);
   }
 
