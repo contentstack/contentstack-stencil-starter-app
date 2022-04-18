@@ -15,6 +15,9 @@ export namespace Components {
         "match": MatchResults;
     }
     interface AppDevtools {
+        "footer": any;
+        "header": any;
+        "page": any;
     }
     interface AppFooter {
     }
@@ -108,6 +111,9 @@ declare namespace LocalJSX {
         "match"?: MatchResults;
     }
     interface AppDevtools {
+        "footer"?: any;
+        "header"?: any;
+        "page"?: any;
     }
     interface AppFooter {
     }

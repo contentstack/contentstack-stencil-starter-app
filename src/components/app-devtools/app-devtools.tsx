@@ -1,4 +1,4 @@
-import { h, Component, State } from '@stencil/core';
+import { h, Component, State, Prop } from '@stencil/core';
 import store from '../../store/state';
 import '@alenaksu/json-viewer';
 
@@ -18,27 +18,30 @@ function filterObject(inputObject) {
   tag: 'app-devtools',
 })
 export class AppDevtools {
-  // @Prop() page: any;
-  // @Prop() blogpost: any;
-  // @Prop() blogList: any;
-  @State() jsonData: any = { header: {}, footer: {}, page: {}, blogpost: {} };
+  @Prop() header: any = {};
+  @Prop() footer: any = {};
+  @Prop() page: any = {};
+  @State() jsonData: any = { header: {}, footer: {} };
 
-  componentDidLoad() {
-    const header = store.get('header');
-    const footer = store.get('footer');
-    const page = store.get('page');
+  componentWillRender() {
+    const header = this.header;
+    const footer = this.footer;
+    const page = this.page;
     const blogpost = store.get('blogpost');
     const blogList = store.get('blogList');
-    let jsonData = { header, footer };
-    page && (jsonData['page'] = page);
-    blogpost && (jsonData['blogPost'] = blogpost);
-    blogList && (jsonData['blogList'] = blogList);
-    jsonData = filterObject(jsonData);
-    this.jsonData = JSON.stringify(jsonData);
-    const element = document.getElementsByClassName('cslp-tooltip');
-    if (element.length > 0) {
-      element[0].outerHTML = null;
-    }
+    let newJsonData = {};
+    console.log('header...', header);
+    console.log('footer...', footer);
+    console.log('page...', page);
+
+    Object.keys(header).length !== 0 && (newJsonData['header'] = header);
+    Object.keys(footer).length !== 0 && (newJsonData['footer'] = footer);
+    Object.keys(page).length !== 0 && (newJsonData['page'] = page);
+    Object.keys(blogpost).length !== 0 && (newJsonData['blogPost'] = blogpost);
+    Object.keys(blogList).length !== 0 && (newJsonData['blogList'] = blogList);
+    newJsonData = filterObject(newJsonData);
+    console.log('json preview', newJsonData);
+    this.jsonData = JSON.stringify(newJsonData);
   }
 
   render() {
@@ -46,7 +49,7 @@ export class AppDevtools {
       const tipValue = document.getElementById('copyTip').dataset;
       tipValue.tip = 'Copied';
 
-      navigator.clipboard.writeText(object);
+      navigator.clipboard.writeText(JSON.stringify(object));
       setTimeout(() => {
         tipValue.tip = 'Copy';
       }, 300);
@@ -59,7 +62,7 @@ export class AppDevtools {
               <h2 class="modal-title" id="staticBackdropLabel">
                 JSON Preview
               </h2>
-              <span class="json-copy" onClick={() => copyObject(this.jsonData)} aria-hidden="true">
+              <span class="json-copy" onClick={() => copyObject(JSON.parse(this.jsonData))} aria-hidden="true">
                 <span class="tool-tip tool-tip-copy" id="copyTip" data-tip="Copy" tabindex="1">
                   <img src="../../assets/copy.svg" alt="copy icon" />
                 </span>
