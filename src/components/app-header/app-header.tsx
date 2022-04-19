@@ -1,50 +1,51 @@
-import { Component, State, h } from '@stencil/core';
+import { Component, State, h, Prop } from '@stencil/core';
 import { parse } from '@saasquatch/stencil-html-parser';
-import Stack, { onEntryChange } from '../../sdk-plugin/index';
+import { onEntryChange } from '../../sdk-plugin/index';
 import store from '../../store/state';
+import { getHeaderRes } from '../../helper';
 
-const fetchEntries = () => {
-  try {
-    return Stack.getEntry({
-      contentTypeUid: 'header',
-      referenceFieldPath: 'navigation_menu.page_reference',
-      jsonRtePath: ['notification_bar.announcement_text'],
-    });
-  } catch (error) {
-    console.error(error);
-  }
-};
 @Component({
   tag: 'app-header',
   styleUrl: 'app-header.css',
 })
 export class AppHeader {
+  @Prop() header: any;
+  @Prop() entries: any;
   @State() internalProps: any = {
     header: {},
   };
   @State() error: any;
 
-  async componentWillLoad() {
-    try {
-      const header = await fetchEntries();
-      store.set('header', header[0][0]);
-
-      this.internalProps = {
-        header: header[0][0],
-      };
-    } catch (error) {
-      console.error(error);
+  buildNavigation(ent, hd) {
+    let newHeader = { ...hd };
+    if (ent.length !== newHeader.navigation_menu.length) {
+      ent.forEach(entry => {
+        const hFound = newHeader?.navigation_menu.find(navLink => navLink.label === entry.title);
+        if (!hFound) {
+          newHeader.navigation_menu?.push({
+            label: entry.title,
+            page_reference: [{ title: entry.title, url: entry.url, $: entry.$ }],
+            $: {},
+          });
+        }
+      });
     }
+    return newHeader;
+  }
+
+  componentWillLoad() {
+    store.set('header', this.header);
   }
 
   componentDidLoad() {
     try {
       onEntryChange(async () => {
-        const header = await fetchEntries();
-        store.set('header', header[0][0]);
+        const header = await getHeaderRes();
+        const newHeader = this.buildNavigation(this.entries, header);
+        store.set('header', newHeader);
 
         this.internalProps = {
-          header: header[0][0],
+          header: newHeader,
         };
       });
     } catch (error) {
@@ -57,11 +58,13 @@ export class AppHeader {
 
     return (
       <header class="header">
-        <div class="note-div">{header.notification_bar?.show_announcement && parse(header.notification_bar?.announcement_text)}</div>
+        <div class="note-div">
+          {header.notification_bar?.show_announcement && <span {...header.notification_bar?.$?.announcement_text}>{parse(header.notification_bar?.announcement_text)}</span>}
+        </div>
         <div class="max-width header-div">
           <div class="wrapper-logo">
             <a href="/" class="logo-tag" title="Contentstack">
-              <img class="logo" src={header.logo?.url} alt={header?.title} title={header?.title} />
+              <img class="logo" {...header.logo?.$?.url} src={header.logo?.url} alt={header?.title} title={header?.title} />
             </a>
           </div>
           <input class="menu-btn" type="checkbox" id="menu-btn" />
@@ -71,7 +74,7 @@ export class AppHeader {
           <nav class="menu">
             <ul class="nav-ul header-ul">
               {header.navigation_menu?.map(list => (
-                <li key={list.label} class="nav-li">
+                <li key={list.label} class="nav-li" {...list.page_reference[0]?.$?.url}>
                   <stencil-route-link url={list.page_reference[0].url} exact activeClass={'active'}>
                     {list.label}
                   </stencil-route-link>
