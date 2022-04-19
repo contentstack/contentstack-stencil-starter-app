@@ -5,38 +5,41 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { MatchResults } from "@stencil/router";
+import { MatchResults, RouterHistory } from "@stencil/router";
 export namespace Components {
-    interface AppAbout {
-    }
     interface AppBlog {
         "match": MatchResults;
     }
     interface AppBlogPost {
+        "history": RouterHistory;
         "match": MatchResults;
     }
-    interface AppContact {
-    }
     interface AppDevtools {
+        "blogList": any;
+        "blogPost": any;
+        "page": any;
     }
     interface AppFooter {
+        "entries": any;
+        "footer": any;
     }
     interface AppHeader {
+        "entries": any;
+        "header": any;
     }
     interface AppHome {
+        "history": RouterHistory;
     }
     interface AppNotFound {
+    }
+    interface AppPage {
+        "history": RouterHistory;
+        "match": MatchResults;
     }
     interface AppRoot {
     }
 }
 declare global {
-    interface HTMLAppAboutElement extends Components.AppAbout, HTMLStencilElement {
-    }
-    var HTMLAppAboutElement: {
-        prototype: HTMLAppAboutElement;
-        new (): HTMLAppAboutElement;
-    };
     interface HTMLAppBlogElement extends Components.AppBlog, HTMLStencilElement {
     }
     var HTMLAppBlogElement: {
@@ -48,12 +51,6 @@ declare global {
     var HTMLAppBlogPostElement: {
         prototype: HTMLAppBlogPostElement;
         new (): HTMLAppBlogPostElement;
-    };
-    interface HTMLAppContactElement extends Components.AppContact, HTMLStencilElement {
-    }
-    var HTMLAppContactElement: {
-        prototype: HTMLAppContactElement;
-        new (): HTMLAppContactElement;
     };
     interface HTMLAppDevtoolsElement extends Components.AppDevtools, HTMLStencilElement {
     }
@@ -85,6 +82,12 @@ declare global {
         prototype: HTMLAppNotFoundElement;
         new (): HTMLAppNotFoundElement;
     };
+    interface HTMLAppPageElement extends Components.AppPage, HTMLStencilElement {
+    }
+    var HTMLAppPageElement: {
+        prototype: HTMLAppPageElement;
+        new (): HTMLAppPageElement;
+    };
     interface HTMLAppRootElement extends Components.AppRoot, HTMLStencilElement {
     }
     var HTMLAppRootElement: {
@@ -92,51 +95,58 @@ declare global {
         new (): HTMLAppRootElement;
     };
     interface HTMLElementTagNameMap {
-        "app-about": HTMLAppAboutElement;
         "app-blog": HTMLAppBlogElement;
         "app-blog-post": HTMLAppBlogPostElement;
-        "app-contact": HTMLAppContactElement;
         "app-devtools": HTMLAppDevtoolsElement;
         "app-footer": HTMLAppFooterElement;
         "app-header": HTMLAppHeaderElement;
         "app-home": HTMLAppHomeElement;
         "app-not-found": HTMLAppNotFoundElement;
+        "app-page": HTMLAppPageElement;
         "app-root": HTMLAppRootElement;
     }
 }
 declare namespace LocalJSX {
-    interface AppAbout {
-    }
     interface AppBlog {
         "match"?: MatchResults;
     }
     interface AppBlogPost {
+        "history"?: RouterHistory;
         "match"?: MatchResults;
     }
-    interface AppContact {
-    }
     interface AppDevtools {
+        "blogList"?: any;
+        "blogPost"?: any;
+        "page"?: any;
     }
     interface AppFooter {
+        "entries"?: any;
+        "footer"?: any;
     }
     interface AppHeader {
+        "entries"?: any;
+        "header"?: any;
     }
     interface AppHome {
+        "history"?: RouterHistory;
     }
     interface AppNotFound {
+    }
+    interface AppPage {
+        "history"?: RouterHistory;
+        "match"?: MatchResults;
     }
     interface AppRoot {
     }
     interface IntrinsicElements {
-        "app-about": AppAbout;
         "app-blog": AppBlog;
         "app-blog-post": AppBlogPost;
-        "app-contact": AppContact;
         "app-devtools": AppDevtools;
         "app-footer": AppFooter;
         "app-header": AppHeader;
         "app-home": AppHome;
         "app-not-found": AppNotFound;
+        "app-page": AppPage;
         "app-root": AppRoot;
     }
 }
@@ -144,15 +154,14 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "app-about": LocalJSX.AppAbout & JSXBase.HTMLAttributes<HTMLAppAboutElement>;
             "app-blog": LocalJSX.AppBlog & JSXBase.HTMLAttributes<HTMLAppBlogElement>;
             "app-blog-post": LocalJSX.AppBlogPost & JSXBase.HTMLAttributes<HTMLAppBlogPostElement>;
-            "app-contact": LocalJSX.AppContact & JSXBase.HTMLAttributes<HTMLAppContactElement>;
             "app-devtools": LocalJSX.AppDevtools & JSXBase.HTMLAttributes<HTMLAppDevtoolsElement>;
             "app-footer": LocalJSX.AppFooter & JSXBase.HTMLAttributes<HTMLAppFooterElement>;
             "app-header": LocalJSX.AppHeader & JSXBase.HTMLAttributes<HTMLAppHeaderElement>;
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-not-found": LocalJSX.AppNotFound & JSXBase.HTMLAttributes<HTMLAppNotFoundElement>;
+            "app-page": LocalJSX.AppPage & JSXBase.HTMLAttributes<HTMLAppPageElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
         }
     }

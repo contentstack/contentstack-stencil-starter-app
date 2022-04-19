@@ -7,10 +7,10 @@ export default function ArchiveRelative(props) {
   return (
     <Fragment>
       {blogs?.map((blog: any, idx: any) => (
-        <a href={blog.url} key={idx}>
+        <a href={blog.url} {...blog.$?.url} key={idx}>
           <div>
-            <h4>{blog.title}</h4>
-            {parse(blog.body.slice(0, 80))}
+            <h4 {...blog.$?.title}>{blog.title}</h4>
+            {<div {...blog.$?.body}>{parse(blog.body.slice(0, 80))}</div>}
           </div>
         </a>
       ))}

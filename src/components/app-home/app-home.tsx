@@ -1,27 +1,16 @@
-import { Component, h, State } from '@stencil/core';
-import Stack, { onEntryChange } from '../../sdk-plugin/index';
+import { Component, h, Prop, State } from '@stencil/core';
+import { onEntryChange } from '../../sdk-plugin/index';
 import RenderComponents from '../render-components';
+import { RouterHistory } from '@stencil/router';
 import Helmet from '@stencil/helmet';
 import { metaData } from '../../utils/common';
-import store from '../../store/state';
-
-const fetchEntries = () => {
-  try {
-    return Stack.getEntryByUrl({
-      contentTypeUid: 'page',
-      entryUrl: '/',
-      referenceFieldPath: ['page_components.from_blog.featured_blogs'],
-      jsonRtePath: ['page_components.from_blog.featured_blogs.body', 'page_components.section_with_buckets.buckets.description'],
-    });
-  } catch (error) {
-    console.error(error);
-  }
-};
+import { getPageRes } from '../../helper';
 @Component({
   tag: 'app-home',
   styleUrl: 'app-home.css',
 })
 export class AppHome {
+  @Prop() history: RouterHistory;
   @State() internalProps: any = {
     result: {},
   };
@@ -29,26 +18,23 @@ export class AppHome {
 
   async componentWillLoad() {
     try {
-      const result = await fetchEntries();
-      store.set('page', result[0]);
-      store.set('blogpost', null);
-
+      const result = await getPageRes('/');
+      if (!result) this.history.replace('/404', {});
       this.internalProps = {
-        result: result[0],
+        result: result,
       };
     } catch (error) {
-      this.error = { notFound: true };
+      console.error(error);
     }
   }
 
   componentDidLoad() {
     try {
       onEntryChange(async () => {
-        const result = await fetchEntries();
-        store.set('page', result[0]);
-        store.set('blogpost', null);
+        const result = await getPageRes('/');
+        if (!result) this.history.replace('/404', {});
         this.internalProps = {
-          result: result[0],
+          result: result,
         };
       });
     } catch (error) {
@@ -62,7 +48,7 @@ export class AppHome {
     return (
       <div>
         <Helmet>{result.seo && result.seo.enable_search_indexing ? metaData(result.seo) : null}</Helmet>
-        <app-devtools />
+        {result && <app-devtools page={result} />}
         {result.page_components && <RenderComponents pageComponents={result.page_components} />}
       </div>
     );

@@ -1,4 +1,4 @@
-import { h, Component, State } from '@stencil/core';
+import { h, Component, State, Prop } from '@stencil/core';
 import store from '../../store/state';
 import '@alenaksu/json-viewer';
 
@@ -18,6 +18,9 @@ function filterObject(inputObject) {
   tag: 'app-devtools',
 })
 export class AppDevtools {
+  @Prop() page: any;
+  @Prop() blogList: any;
+  @Prop() blogPost: any;
   @State() internalProps: any = {
     jsonData: {},
   };
@@ -25,19 +28,15 @@ export class AppDevtools {
   componentWillRender() {
     const header = store.get('header');
     const footer = store.get('footer');
-    const page = store.get('page');
-    const blogpost = store.get('blogpost');
     let jsonData = { header, footer };
-    page && (jsonData['page'] = page);
-    blogpost && (jsonData['blog_post'] = blogpost);
+
+    this.page && Object.keys(this.page).length && (jsonData['page'] = this.page);
+    this.blogList && Object.keys(this.blogList).length && (jsonData['blogList'] = this.blogList);
+    this.blogPost && Object.keys(this.blogPost).length && (jsonData['blogPost'] = this.blogPost);
     jsonData = filterObject(jsonData);
     this.internalProps = {
       jsonData: JSON.stringify(jsonData),
     };
-    const element = document.getElementsByClassName('cslp-tooltip')
-    if (element.length > 0) {
-      element[0].outerHTML = null
-    }
   }
 
   render() {
@@ -47,7 +46,7 @@ export class AppDevtools {
       const tipValue = document.getElementById('copyTip').dataset;
       tipValue.tip = 'Copied';
 
-      navigator.clipboard.writeText(JSON.stringify(object));
+      navigator.clipboard.writeText(object);
       setTimeout(() => {
         tipValue.tip = 'Copy';
       }, 300);
@@ -60,7 +59,7 @@ export class AppDevtools {
               <h2 class="modal-title" id="staticBackdropLabel">
                 JSON Preview
               </h2>
-              <span class="json-copy" onClick={() => copyObject(JSON.parse(jsonData))} aria-hidden="true">
+              <span class="json-copy" onClick={() => copyObject(jsonData)} aria-hidden="true">
                 <span class="tool-tip tool-tip-copy" id="copyTip" data-tip="Copy" tabindex="1">
                   <img src="../../assets/copy.svg" alt="copy icon" />
                 </span>
