@@ -1,14 +1,16 @@
-import { Component, State, h } from '@stencil/core';
+import { Component, State, h, Prop } from '@stencil/core';
 import { parse } from '@saasquatch/stencil-html-parser';
 import { onEntryChange } from '../../sdk-plugin/index';
 import store from '../../store/state';
-import { getHeaderRes, getAllEntries } from '../../helper';
+import { getHeaderRes } from '../../helper';
 
 @Component({
   tag: 'app-header',
   styleUrl: 'app-header.css',
 })
 export class AppHeader {
+  @Prop() header: any;
+  @Prop() entries: any;
   @State() internalProps: any = {
     header: {},
   };
@@ -31,12 +33,15 @@ export class AppHeader {
     return newHeader;
   }
 
+  componentWillLoad() {
+    store.set('header', this.header);
+  }
+
   componentDidLoad() {
     try {
       onEntryChange(async () => {
         const header = await getHeaderRes();
-        const allEntry = await getAllEntries();
-        const newHeader = this.buildNavigation(allEntry, header);
+        const newHeader = this.buildNavigation(this.entries, header);
         store.set('header', newHeader);
 
         this.internalProps = {

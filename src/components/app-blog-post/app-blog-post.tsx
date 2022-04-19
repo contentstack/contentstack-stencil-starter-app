@@ -1,14 +1,12 @@
 import { Component, Prop, h, State } from '@stencil/core';
-import { MatchResults } from '@stencil/router';
+import { MatchResults, RouterHistory } from '@stencil/router';
 import { onEntryChange } from '../../sdk-plugin/index';
 import RenderComponents from '../../components/render-components';
 import ArchiveRelative from '../../components/archive-relative';
-import { RouterHistory } from '@stencil/router';
 import moment from 'moment';
 import { parse } from '@saasquatch/stencil-html-parser';
 import Helmet from '@stencil/helmet';
 import { metaData } from '../../utils/common';
-import store from '../../store/state';
 import { getPageRes, getBlogPostRes } from '../../helper';
 
 @Component({
@@ -25,6 +23,23 @@ export class AppBlogPost {
   };
   @State() error: any;
 
+  async componentWillLoad() {
+    const blogId = this.match && this.match.url;
+
+    try {
+      const banner = await getPageRes('/blog');
+      const blog = await getBlogPostRes(blogId);
+
+      if (!banner || !blog) this.history.push('/404', {});
+      this.internalProps = {
+        result: blog,
+        banner,
+      };
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   async componentDidLoad() {
     const blogId = this.match && this.match.url;
 
@@ -32,10 +47,8 @@ export class AppBlogPost {
       onEntryChange(async () => {
         const banner = await getPageRes('/blog');
         const blog = await getBlogPostRes(blogId);
-        if (!banner || !blog) this.history.push('/404', {});
-        store.set('page', banner);
-        store.set('blogpost', blog);
 
+        if (!banner || !blog) this.history.push('/404', {});
         this.internalProps = {
           result: blog,
           banner,
@@ -52,8 +65,7 @@ export class AppBlogPost {
     return (
       <div>
         <Helmet>{result.seo && result.seo.enable_search_indexing ? metaData(result.seo) : null}</Helmet>
-        {/* <app-devtools page={banner} blogpost={result} blogList={undefined} /> */}
-        <app-devtools />
+        {result && banner && <app-devtools page={banner} blogPost={result} />}
         {banner && <RenderComponents pageComponents={banner?.page_components} blogsPage />}
         <div class="blog-container">
           <div class="blog-detail">
@@ -65,7 +77,7 @@ export class AppBlogPost {
             ) : (
               ''
             )}
-            {result.body ? parse(result.body) : ''}
+            {result.body ? <div {...result.$?.body}>{parse(result.body)}</div> : ''}
           </div>
           <div class="blog-column-right">
             <div class="related-post">

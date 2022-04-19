@@ -7,9 +7,7 @@ import moment from 'moment';
 import { parse } from '@saasquatch/stencil-html-parser';
 import Helmet from '@stencil/helmet';
 import { metaData } from '../../utils/common';
-import store from '../../store/state';
 import { getPageRes, getBlogListRes } from '../../helper';
-// import Skeleton from 'react-loading-skeleton';
 
 @Component({
   tag: 'app-blog',
@@ -25,14 +23,34 @@ export class AppBlog {
   };
   @State() error: any;
 
-  componentWillLoad() {
+  async componentWillLoad() {
+    try {
+      const blog = await getPageRes('/blog');
+      const result = await getBlogListRes();
+      let archived = [],
+        blogList = [];
+      result.forEach(blogs => {
+        if (blogs.is_archived) {
+          archived.push(blogs);
+        } else {
+          blogList.push(blogs);
+        }
+      });
+      this.internalProps = {
+        blog: blog,
+        blogList,
+        archived,
+      };
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  componentDidLoad() {
     try {
       onEntryChange(async () => {
         const blog = await getPageRes('/blog');
         const result = await getBlogListRes();
-        store.set('page', blog);
-        store.set('blogpost', result);
-
         let archived = [],
           blogList = [];
         result.forEach(blogs => {
@@ -58,8 +76,7 @@ export class AppBlog {
     return (
       <div>
         <Helmet>{blog.seo && blog.seo.enable_search_indexing ? metaData(blog.seo) : null}</Helmet>
-        <app-devtools />
-        {/* <app-devtools page={blog} blogList={blogList.concat(archived)} blogpost={undefined} /> */}
+        {blog && <app-devtools page={blog} blogList={blogList.concat(archived)} />}
         {blog !== {} && blog.page_components && <RenderComponents pageComponents={blog.page_components} blogsPage />}
 
         <div class="blog-container">
