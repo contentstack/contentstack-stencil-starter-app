@@ -8,7 +8,7 @@ import store from '../../store/state';
 import { MatchResults } from '@stencil/router';
 import { getPageRes } from '../../helper';
 @Component({
-  tag: 'app-page'
+  tag: 'app-page',
 })
 export class AppHome {
   @Prop() history: RouterHistory;
@@ -23,7 +23,7 @@ export class AppHome {
       if (!result) this.history.push('/404', {});
       store.set('page', result);
       store.set('blogpost', null);
-      store.set('blogList',null);
+      store.set('blogList', null);
       this.internalProps = {
         result: result,
       };
@@ -32,6 +32,18 @@ export class AppHome {
     }
   }
   @State() error: any;
+
+  async componentWillLoad() {
+    try {
+      const result = await getPageRes(this.match.url);
+      if (!result) this.history.replace('/404', {});
+      this.internalProps = {
+        result: result,
+      };
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   componentDidLoad() {
     try {
@@ -53,8 +65,7 @@ export class AppHome {
     return (
       <div>
         <Helmet>{result.seo && result.seo.enable_search_indexing ? metaData(result.seo) : null}</Helmet>
-        {/* <app-devtools page={result} blogpost={undefined} blogList={undefined} /> */}
-        <app-devtools />
+        {result && <app-devtools page={result} />}
         {result.page_components && <RenderComponents pageComponents={result.page_components} />}
       </div>
     );

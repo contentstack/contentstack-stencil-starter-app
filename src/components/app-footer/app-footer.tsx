@@ -1,4 +1,4 @@
-import { Component, State, h } from '@stencil/core';
+import { Component, State, h, Prop } from '@stencil/core';
 import { parse } from '@saasquatch/stencil-html-parser';
 import { onEntryChange } from '../../sdk-plugin/index';
 import store from '../../store/state';
@@ -8,6 +8,8 @@ import { getFooterRes, getAllEntries } from '../../helper';
   tag: 'app-footer',
 })
 export class AppFooter {
+  @Prop() footer: any;
+  @Prop() entries: any;
   @State() internalProps: any = {
     footer: {},
   };
@@ -28,6 +30,10 @@ export class AppFooter {
       });
     }
     return newFooter;
+  }
+
+  componentWillLoad() {
+    store.set('footer', this.footer);
   }
 
   componentDidLoad() {

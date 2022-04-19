@@ -10,7 +10,7 @@ export default function ArchiveRelative(props) {
         <a href={blog.url} {...blog.$?.url} key={idx}>
           <div>
             <h4 {...blog.$?.title}>{blog.title}</h4>
-            {parse(blog.body.slice(0, 80))}
+            {<div {...blog.$?.body}>{parse(blog.body.slice(0, 80))}</div>}
           </div>
         </a>
       ))}

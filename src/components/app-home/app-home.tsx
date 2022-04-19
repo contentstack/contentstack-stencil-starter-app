@@ -4,7 +4,6 @@ import RenderComponents from '../render-components';
 import { RouterHistory } from '@stencil/router';
 import Helmet from '@stencil/helmet';
 import { metaData } from '../../utils/common';
-import store from '../../store/state';
 import { getPageRes } from '../../helper';
 @Component({
   tag: 'app-home',
@@ -17,14 +16,23 @@ export class AppHome {
   };
   @State() error: any;
 
+  async componentWillLoad() {
+    try {
+      const result = await getPageRes('/');
+      if (!result) this.history.replace('/404', {});
+      this.internalProps = {
+        result: result,
+      };
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   componentDidLoad() {
     try {
       onEntryChange(async () => {
         const result = await getPageRes('/');
         if (!result) this.history.replace('/404', {});
-        store.set('page', result);
-        store.set('blogpost', null);
-        store.set('blogList', null);
         this.internalProps = {
           result: result,
         };
@@ -40,7 +48,7 @@ export class AppHome {
     return (
       <div>
         <Helmet>{result.seo && result.seo.enable_search_indexing ? metaData(result.seo) : null}</Helmet>
-        {result && <app-devtools page={result}/>}
+        {result && <app-devtools page={result} />}
         {result.page_components && <RenderComponents pageComponents={result.page_components} />}
       </div>
     );

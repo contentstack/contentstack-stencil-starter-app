@@ -18,34 +18,35 @@ function filterObject(inputObject) {
   tag: 'app-devtools',
 })
 export class AppDevtools {
-  @Prop() header: any = {};
-  @Prop() footer: any = {};
-  @Prop() page: any = {};
-  @State() jsonData: any = { header: {}, footer: {} };
+  @Prop() page: any;
+  @Prop() blogList: any;
+  @Prop() blogPost: any;
+  @State() internalProps: any = {
+    jsonData: {},
+  };
 
   componentWillRender() {
-    const header = this.header;
-    const footer = this.footer;
-    const page = this.page;
-    const blogpost = store.get('blogpost');
-    const blogList = store.get('blogList');
-    let newJsonData = {};
+    const header = store.get('header');
+    const footer = store.get('footer');
+    let jsonData = { header, footer };
 
-    Object.keys(header).length !== 0 && (newJsonData['header'] = header);
-    Object.keys(footer).length !== 0 && (newJsonData['footer'] = footer);
-    Object.keys(page).length !== 0 && (newJsonData['page'] = page);
-    Object.keys(blogpost).length !== 0 && (newJsonData['blogPost'] = blogpost);
-    Object.keys(blogList).length !== 0 && (newJsonData['blogList'] = blogList);
-    newJsonData = filterObject(newJsonData);
-    this.jsonData = JSON.stringify(newJsonData);
+    this.page && Object.keys(this.page).length && (jsonData['page'] = this.page);
+    this.blogList && Object.keys(this.blogList).length && (jsonData['blogList'] = this.blogList);
+    this.blogPost && Object.keys(this.blogPost).length && (jsonData['blogPost'] = this.blogPost);
+    jsonData = filterObject(jsonData);
+    this.internalProps = {
+      jsonData: JSON.stringify(jsonData),
+    };
   }
 
   render() {
+    const { jsonData } = this.internalProps;
+
     function copyObject(object) {
       const tipValue = document.getElementById('copyTip').dataset;
       tipValue.tip = 'Copied';
 
-      navigator.clipboard.writeText(JSON.stringify(object));
+      navigator.clipboard.writeText(object);
       setTimeout(() => {
         tipValue.tip = 'Copy';
       }, 300);
@@ -58,7 +59,7 @@ export class AppDevtools {
               <h2 class="modal-title" id="staticBackdropLabel">
                 JSON Preview
               </h2>
-              <span class="json-copy" onClick={() => copyObject(JSON.parse(this.jsonData))} aria-hidden="true">
+              <span class="json-copy" onClick={() => copyObject(jsonData)} aria-hidden="true">
                 <span class="tool-tip tool-tip-copy" id="copyTip" data-tip="Copy" tabindex="1">
                   <img src="../../assets/copy.svg" alt="copy icon" />
                 </span>
@@ -66,7 +67,7 @@ export class AppDevtools {
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <json-viewer id="jsonViewer">{this.jsonData}</json-viewer>
+              <json-viewer id="jsonViewer">{jsonData}</json-viewer>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn tertiary-btn modal-btn" data-bs-dismiss="modal">
