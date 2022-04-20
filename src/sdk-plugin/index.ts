@@ -42,7 +42,10 @@ Stack.setHost(hostUrl)
 ContentstackLivePreview.init({
   ssr: false,
   //@ts-ignore
-  stackSdk: Stack
+  stackSdk: Stack,
+  clientUrlParams: {
+    host: stackConfig.clientUrlParams.host,
+  }
 })
 
 const renderOption = {
