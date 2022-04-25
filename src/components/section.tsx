@@ -7,10 +7,12 @@ export default function Section(props) {
   function contentSection(key: any) {
     return (
       <div class="home-content" key={key}>
-        {section.title_h2 && <h2>{section.title_h2}</h2>}
-        {section.description && <p>{section.description}</p>}
+        {section.title_h2 && <h2 {...section.$?.title_h2}>{section.title_h2}</h2>}
+        {section.description && <p {...section.$?.description}>{section.description}</p>}
         {section.call_to_action.title && section.call_to_action.href ? (
-          <a href={section.call_to_action.href} class="btn secondary-btn">{section.call_to_action.title}</a>
+          <a {...section.call_to_action.$?.href} href={section.call_to_action.href} class="btn secondary-btn">
+            {section.call_to_action.title}
+          </a>
         ) : (
           ''
         )}
@@ -19,7 +21,7 @@ export default function Section(props) {
   }
 
   function imageContent(key: any) {
-    return <img src={section.image.url} alt={section.image.filename} key={key} />;
+    return <img {...section.image.$?.url} src={section.image.url} alt={section.image.filename} key={key} />;
   }
 
   return (
