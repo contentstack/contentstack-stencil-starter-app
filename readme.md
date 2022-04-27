@@ -22,6 +22,6 @@ We have created an in-depth tutorial on how you can create a stencil.js starter 
 
 Read Contentstack [docs](https://www.contentstack.com/docs/)
 
-Region support [Documentation](https://www.contentstack.com/docs/developers/selecting-region-in-contentstack-starter-apps)
+Region support [docs](https://www.contentstack.com/docs/developers/selecting-region-in-contentstack-starter-apps)
 
 Learn about [Stencil.js](https://stenciljs.com/docs/getting-started)
