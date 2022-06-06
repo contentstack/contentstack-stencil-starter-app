@@ -5,6 +5,11 @@ import { RouterHistory, MatchResults } from '@stencil/router';
 import Helmet from '@stencil/helmet';
 import { metaData } from '../../utils/common';
 import { getPageRes } from '../../helper';
+
+type NewValue = {
+  url: string
+}
+
 @Component({
   tag: 'app-page',
 })
@@ -15,7 +20,7 @@ export class AppHome {
     result: {},
   };
   @Watch('match')
-  async watchPropHandler(newValue) {
+  async watchPropHandler(newValue: NewValue) {
     try {
       const result = await getPageRes(newValue.url);
       if (!result) this.history.push('/404', {});
@@ -26,7 +31,7 @@ export class AppHome {
       console.error(error);
     }
   }
-  @State() error: any;
+  @State() error: string;
 
   async componentWillLoad() {
     try {
