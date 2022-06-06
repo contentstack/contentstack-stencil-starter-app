@@ -9,12 +9,18 @@ import BlogSection from './blog-section';
 import SectionBucket from './section-bucket';
 import AboutSectionBucket from './about-section-bucket';
 import SectionWithHtmlCode from './section-with-html-code';
+import { Component } from '../typescript/component'
 
-export default function RenderComponents(props) {
+type ComponentProps = {
+  pageComponents: [Component];
+  blogsPage?: {};
+}
+
+export default function RenderComponents(props: ComponentProps) {
   const { pageComponents, blogsPage } = props;
   return (
     <Fragment>
-      {pageComponents?.map((component: any, key: any) => {
+      {pageComponents?.map((component, key) => {
         if (component.hero_banner) {
           return blogsPage ? <BlogBanner blog_banner={component.hero_banner} key={`component-${key}`} /> : <HeroBanner banner={component.hero_banner} />;
         }

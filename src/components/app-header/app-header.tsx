@@ -3,23 +3,40 @@ import { parse } from '@saasquatch/stencil-html-parser';
 import { onEntryChange } from '../../sdk-plugin/index';
 import store from '../../store/state';
 import { getHeaderRes } from '../../helper';
+import { HeaderProps, HeaderMenu } from '../../typescript/layout';
+
+type AdditionalParam = {
+  title: string;
+  copyright: string;
+  announcement_text: string;
+  label: string;
+  url: string;
+  body: string;
+  href: string;
+}
+
+type Entry = {
+  title: string;
+  url: string;
+  $: AdditionalParam;
+}
 
 @Component({
   tag: 'app-header',
   styleUrl: 'app-header.css',
 })
 export class AppHeader {
-  @Prop() header: any;
-  @Prop() entries: any;
+  @Prop() header: {};
+  @Prop() entries: {};
   @State() internalProps: any = {
     header: {},
   };
-  @State() error: any;
+  @State() error: string;
 
-  buildNavigation(ent, hd) {
+  buildNavigation(ent, hd: HeaderProps) {
     let newHeader = { ...hd };
     if (ent.length !== newHeader.navigation_menu.length) {
-      ent.forEach(entry => {
+      ent.forEach((entry: Entry) => {
         const hFound = newHeader?.navigation_menu.find(navLink => navLink.label === entry.title);
         if (!hFound) {
           newHeader.navigation_menu?.push({
@@ -73,7 +90,7 @@ export class AppHeader {
           </label>
           <nav class="menu">
             <ul class="nav-ul header-ul">
-              {header.navigation_menu?.map(list => (
+              {header.navigation_menu?.map((list: HeaderMenu) => (
                 <li key={list.label} class="nav-li" {...list.page_reference[0]?.$?.url}>
                   <stencil-route-link url={list.page_reference[0].url} exact activeClass={'active'}>
                     {list.label}
