@@ -1,6 +1,6 @@
 import { h } from '@stencil/core';
 
-export function metaData(seo: any) {
+export function metaData(seo: {}) {
   const metaArr = [];
   for (const key in seo) {
     if (key !== 'enable_search_indexing') {

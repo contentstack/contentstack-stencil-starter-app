@@ -3,19 +3,20 @@ import { parse } from '@saasquatch/stencil-html-parser';
 import { onEntryChange } from '../../sdk-plugin/index';
 import store from '../../store/state';
 import { getFooterRes, getAllEntries } from '../../helper';
+import { Entry, FooterProps, Menu, Social } from '../../typescript/layout';
 
 @Component({
   tag: 'app-footer',
 })
 export class AppFooter {
-  @Prop() footer: any;
-  @Prop() entries: any;
+  @Prop() footer: {};
+  @Prop() entries: {};
   @State() internalProps: any = {
     footer: {},
   };
-  @State() error: any;
+  @State() error: string;
 
-  buildNavigation(ent, ft) {
+  buildNavigation(ent: Entry, ft: FooterProps) {
     let newFooter = { ...ft };
     if (ent.length !== newFooter.navigation.link.length) {
       ent.forEach(entry => {
@@ -66,7 +67,7 @@ export class AppFooter {
           <div class="col-half">
             <nav>
               <ul class="nav-ul">
-                {footer.navigation?.link.map(menu => (
+                {footer.navigation?.link.map((menu: Menu) => (
                   <li class="footer-nav-li" key={menu.title} {...menu?.$?.href}>
                     <stencil-route-link url={menu.href}>{menu.title}</stencil-route-link>
                   </li>
@@ -76,7 +77,7 @@ export class AppFooter {
           </div>
           <div class="col-quarter social-link">
             <div class="social-nav">
-              {footer.social?.social_share.map(social => (
+              {footer.social?.social_share.map((social: Social) => (
                 <a href={social.link.href} title={social.link.title} key={social.link.title}>
                   {social.icon && <img {...social.icon?.$?.url} src={social.icon.url} alt={social.link.title} />}
                 </a>
