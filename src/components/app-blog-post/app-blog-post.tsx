@@ -21,7 +21,7 @@ export class AppBlogPost {
     banner: {},
     result: {},
   };
-  @State() error: any;
+  @State() error: string;
 
   async componentWillLoad() {
     const blogId = this.match && this.match.url;

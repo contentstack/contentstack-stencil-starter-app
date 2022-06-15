@@ -1,6 +1,33 @@
 import { h } from '@stencil/core';
+import { Image } from '../typescript/action';
 
-export default function TeamSection(props) {
+type AdditionalParam = {
+  title_h2: {};
+  description: {};
+  name: {};
+  designation: {};
+}
+
+type Employee = {
+  image: Image;
+  name: string;
+  designation: string;
+  $: AdditionalParam;
+}
+
+type Data = {
+  title_h2: string;
+  description: string;
+  employees: [Employee];
+  $: AdditionalParam;
+}
+
+type OurTeam = {
+  ourTeam: Data;
+  key: string;
+}
+
+export default function TeamSection(props: OurTeam) {
   const { ourTeam } = props;
   return (
     <div class="about-team-section">

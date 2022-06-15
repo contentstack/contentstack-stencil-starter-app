@@ -8,6 +8,31 @@ import { parse } from '@saasquatch/stencil-html-parser';
 import Helmet from '@stencil/helmet';
 import { metaData } from '../../utils/common';
 import { getPageRes, getBlogListRes } from '../../helper';
+import { Image } from '../../typescript/action';
+
+type Result = {
+  is_archived: boolean;
+}
+
+type AdditionalParam = {
+  title: {};
+  date: {};
+  body: {};
+}
+
+type Author = {
+  title: string;
+}
+
+type BlogList = {
+  featured_image: Image;
+  url: string;
+  title: string;
+  date: string;
+  body: string;
+  author: Author[];
+  $: AdditionalParam;
+}
 
 @Component({
   tag: 'app-blog',
@@ -21,12 +46,12 @@ export class AppBlog {
     blog: {},
     blogList: [],
   };
-  @State() error: any;
+  @State() error: string;
 
   async componentWillLoad() {
     try {
       const blog = await getPageRes('/blog');
-      const result = await getBlogListRes();
+      const result: [Result] = await getBlogListRes();
       let archived = [],
         blogList = [];
       result.forEach(blogs => {
@@ -50,7 +75,7 @@ export class AppBlog {
     try {
       onEntryChange(async () => {
         const blog = await getPageRes('/blog');
-        const result = await getBlogListRes();
+        const result: [Result] = await getBlogListRes();
         let archived = [],
           blogList = [];
         result.forEach(blogs => {
@@ -82,7 +107,7 @@ export class AppBlog {
         <div class="blog-container">
           <div class="blog-column-left">
             {blogList.length > 0 &&
-              blogList.map((bloglist, index) => (
+              blogList.map((bloglist: BlogList, index: number) => (
                 <div class="blog-list" key={index}>
                   {bloglist.featured_image && (
                     <a href={bloglist.url}>

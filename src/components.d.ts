@@ -15,17 +15,17 @@ export namespace Components {
         "match": MatchResults;
     }
     interface AppDevtools {
-        "blogList": any;
-        "blogPost": any;
-        "page": any;
+        "blogList": [];
+        "blogPost": {};
+        "page": string;
     }
     interface AppFooter {
-        "entries": any;
-        "footer": any;
+        "entries": {};
+        "footer": {};
     }
     interface AppHeader {
-        "entries": any;
-        "header": any;
+        "entries": {};
+        "header": {};
     }
     interface AppHome {
         "history": RouterHistory;
@@ -115,17 +115,17 @@ declare namespace LocalJSX {
         "match"?: MatchResults;
     }
     interface AppDevtools {
-        "blogList"?: any;
-        "blogPost"?: any;
-        "page"?: any;
+        "blogList"?: [];
+        "blogPost"?: {};
+        "page"?: string;
     }
     interface AppFooter {
-        "entries"?: any;
-        "footer"?: any;
+        "entries"?: {};
+        "footer"?: {};
     }
     interface AppHeader {
-        "entries"?: any;
-        "header"?: any;
+        "entries"?: {};
+        "header"?: {};
     }
     interface AppHome {
         "history"?: RouterHistory;
