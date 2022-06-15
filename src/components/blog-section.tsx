@@ -5,8 +5,14 @@
 /* eslint-disable react/no-array-index-key */
 import { h } from '@stencil/core';
 import { parse } from '@saasquatch/stencil-html-parser';
+import { FeaturedBlogData } from '../typescript/component';
 
-export default function BlogSection(props) {
+type FeaturedBlogProps = {
+  blogs: FeaturedBlogData;
+  key: string;
+}
+
+export default function BlogSection(props: FeaturedBlogProps) {
   const fromBlog = props.blogs;
   return (
     <div class="community-section">

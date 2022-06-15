@@ -1,9 +1,29 @@
 /* eslint-disable eqeqeq */
 
 import { h } from '@stencil/core';
+import { Action, Image } from "../typescript/action";
+
+type AdditionalParam = {
+  banner_title: {};
+  banner_description: {};
+}
+
+type Data = {
+  bg_color: string;
+  banner_title: string;
+  text_color: string;
+  banner_description: string;
+  call_to_action: Action;
+  banner_image: Image;
+  $: AdditionalParam;
+}
+
+type BannerProps = {
+  banner: Data;
+}
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
-export default function HeroBanner({ banner }) {
+export default function HeroBanner({ banner }: BannerProps) {
   return (
     <div
       class="hero-banner"

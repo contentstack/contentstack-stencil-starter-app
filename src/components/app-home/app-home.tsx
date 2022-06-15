@@ -14,7 +14,7 @@ export class AppHome {
   @State() internalProps: any = {
     result: {},
   };
-  @State() error: any;
+  @State() error: string;
 
   async componentWillLoad() {
     try {

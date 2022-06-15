@@ -1,7 +1,23 @@
 import { h } from '@stencil/core';
 
+type AdditionalParam = {
+  banner_title: {};
+  banner_description: {};
+}
+
+type Data = {
+  banner_title?: string;
+  banner_description?: string;
+  $?: AdditionalParam;
+}
+
+type BannerProps = {
+  blog_banner: Data;
+  key: string;
+}
+
 /* eslint-disable camelcase */
-export default function BlogBanner(props) {
+export default function BlogBanner(props: BannerProps) {
   const { blog_banner } = props;
   return (
     <div class="blog-page-banner">

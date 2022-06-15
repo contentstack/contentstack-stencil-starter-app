@@ -1,5 +1,7 @@
 import { Component, Fragment, h, State } from '@stencil/core';
 import { getHeaderRes, getFooterRes, getAllEntries } from '../../helper';
+import { Entry, HeaderProps, FooterProps } from "../../typescript/layout";
+
 @Component({
   tag: 'app-root',
   styleUrl: 'app-root.css',
@@ -7,7 +9,7 @@ import { getHeaderRes, getFooterRes, getAllEntries } from '../../helper';
 export class AppRoot {
   @State() layout = { header: {}, footer: {}, entries: {} };
 
-  buildNavigation(ent, hd, ft) {
+  buildNavigation(ent: Entry, hd: HeaderProps, ft: FooterProps) {
     let newHeader = { ...hd };
     let newFooter = { ...ft };
     if (ent.length !== newHeader.navigation_menu.length) {

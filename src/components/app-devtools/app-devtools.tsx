@@ -2,7 +2,7 @@ import { h, Component, State, Prop } from '@stencil/core';
 import store from '../../store/state';
 import '@alenaksu/json-viewer';
 
-function filterObject(inputObject) {
+function filterObject(inputObject: any) {
   const unWantedProps = ['uid', '_version', 'ACL', '_in_progress', 'created_at', 'created_by', 'updated_at', 'updated_by', 'publish_details'];
   for (const key in inputObject) {
     unWantedProps.includes(key) && delete inputObject[key];
@@ -18,9 +18,9 @@ function filterObject(inputObject) {
   tag: 'app-devtools',
 })
 export class AppDevtools {
-  @Prop() page: any;
-  @Prop() blogList: any;
-  @Prop() blogPost: any;
+  @Prop() page: string;
+  @Prop() blogList: [];
+  @Prop() blogPost: {};
   @State() internalProps: any = {
     jsonData: {},
   };
@@ -42,11 +42,11 @@ export class AppDevtools {
   render() {
     const { jsonData } = this.internalProps;
 
-    function copyObject(object) {
+    function copyObject(copyText: string) {
       const tipValue = document.getElementById('copyTip').dataset;
       tipValue.tip = 'Copied';
 
-      navigator.clipboard.writeText(object);
+      navigator.clipboard.writeText(copyText);
       setTimeout(() => {
         tipValue.tip = 'Copy';
       }, 300);
