@@ -2,7 +2,27 @@
 import { parse } from '@saasquatch/stencil-html-parser';
 import { h } from '@stencil/core';
 
-export default function SectionWithHtmlCode(props) {
+type AdditionalParam = {
+  title: {};
+  html_code_alignment?: {};
+  description: {};
+  html_code: {};
+}
+
+type Data = {
+  title: string;
+  html_code_alignment: string;
+  description: string;
+  html_code: string;
+  $: AdditionalParam;
+}
+
+type EmbedSection = {
+  embedCode: Data;
+  key: string;
+}
+
+export default function SectionWithHtmlCode(props: EmbedSection) {
   const { embedCode } = props;
   if (embedCode.html_code_alignment === 'Left') {
     return (

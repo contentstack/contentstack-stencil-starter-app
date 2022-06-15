@@ -1,8 +1,35 @@
 /* eslint-disable no-undef */
 import { parse } from '@saasquatch/stencil-html-parser';
 import { h } from '@stencil/core';
+import { Image } from '../typescript/action';
+import { BucketList } from '../typescript/component';
 
-function bucketContent(bucket, index) {
+type AdditionalParam = {
+  title_h2: {};
+  title_h3: {};
+  description: {};
+}
+
+type Bucket = {
+  title_h3: string;
+  description: string;
+  icon: Image;
+  $: AdditionalParam;
+}
+
+type Data = {
+  title_h2: string;
+  description: string;
+  buckets: BucketList;
+  $: AdditionalParam;
+}
+
+type BucketProps = {
+  sectionWithBuckets: Data;
+  key: string;
+}
+
+function bucketContent(bucket: Bucket, index: number) {
   return (
     <div class="mission-content-section" key={index}>
       {bucket.icon && <img class="mission-icon" {...bucket.icon.$?.url} src={bucket.icon.url} alt="art work" />}
@@ -15,7 +42,7 @@ function bucketContent(bucket, index) {
   );
 }
 
-export default function AboutSectionBucket(props) {
+export default function AboutSectionBucket(props: BucketProps) {
   const { sectionWithBuckets } = props;
 
   return (
