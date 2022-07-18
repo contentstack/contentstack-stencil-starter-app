@@ -34,7 +34,7 @@
     "@stencil/eslint-plugin": "^0.4.0",
     "@stencil/helmet": "^0.3.3",
     "@stencil/store": "^2.0.0",
-    "@typescript-eslint/parser": "^5.30.6",
+    "@typescript-eslint/parser": "^4.0.0",
     "contentstack": "^3.15.2",
     "moment": "^2.29.4",
     "pretty-print-json": "^1.2.5",
