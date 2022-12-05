@@ -1,30 +1,55 @@
-import { Component, State, h } from '@stencil/core';
+import { Component, State, h, Prop } from '@stencil/core';
 import { parse } from '@saasquatch/stencil-html-parser';
-import Stack from '../../sdk-plugin/index';
+import { onEntryChange } from '../../sdk-plugin/index';
 import store from '../../store/state';
+import { getFooterRes, getAllEntries } from '../../helper';
+import { Entry, FooterProps, Menu, Social } from '../../typescript/layout';
 
 @Component({
   tag: 'app-footer',
 })
 export class AppFooter {
+  @Prop() footer: {};
+  @Prop() entries: {};
   @State() internalProps: any = {
     footer: {},
   };
-  @State() error: any;
+  @State() error: string;
 
-  async componentWillLoad() {
-    try {
-      const footer = await Stack.getEntry({
-        contentTypeUid: 'footer',
-        referenceFieldPath: '',
-        jsonRtePath: ['copyright'],
+  buildNavigation(ent: Entry, ft: FooterProps) {
+    let newFooter = { ...ft };
+    if (ent.length !== newFooter.navigation.link.length) {
+      ent.forEach(entry => {
+        const fFound = newFooter?.navigation.link.find(nlink => nlink.title === entry.title);
+        if (!fFound) {
+          newFooter.navigation.link?.push({
+            title: entry.title,
+            href: entry.url,
+            $: entry.$,
+          });
+        }
       });
-      store.set('footer', footer[0][0]);
-      this.internalProps = {
-        footer: footer[0][0],
-      };
+    }
+    return newFooter;
+  }
+
+  componentWillLoad() {
+    store.set('footer', this.footer);
+  }
+
+  componentDidLoad() {
+    try {
+      onEntryChange(async () => {
+        const footer = await getFooterRes();
+        const allEntry = await getAllEntries();
+        const newFooter = await this.buildNavigation(allEntry, footer);
+        store.set('footer', newFooter);
+        this.internalProps = {
+          footer: footer,
+        };
+      });
     } catch (error) {
-      this.error = { notFound: true };
+      console.error(error);
     }
   }
 
@@ -36,14 +61,14 @@ export class AppFooter {
         <div class="max-width footer-div">
           <div class="col-quarter">
             <a href="/" class="logo-tag">
-              <img src={footer.logo.url} alt={footer.title} title={footer.title} class="logo footer-logo" />
+              <img {...footer.logo?.$?.url} src={footer.logo?.url} alt={footer?.title} title={footer?.title} class="logo footer-logo" />
             </a>
           </div>
           <div class="col-half">
             <nav>
               <ul class="nav-ul">
-                {footer.navigation.link?.map(menu => (
-                  <li class="footer-nav-li" key={menu.title}>
+                {footer.navigation?.link.map((menu: Menu) => (
+                  <li class="footer-nav-li" key={menu.title} {...menu?.$?.href}>
                     <stencil-route-link url={menu.href}>{menu.title}</stencil-route-link>
                   </li>
                 ))}
@@ -52,15 +77,15 @@ export class AppFooter {
           </div>
           <div class="col-quarter social-link">
             <div class="social-nav">
-              {footer.social.social_share?.map(social => (
+              {footer.social?.social_share.map((social: Social) => (
                 <a href={social.link.href} title={social.link.title} key={social.link.title}>
-                  {social.icon && <img src={social.icon.url} alt={social.link.title} />}
+                  {social.icon && <img {...social.icon?.$?.url} src={social.icon.url} alt={social.link.title} />}
                 </a>
               ))}
             </div>
           </div>
         </div>
-        <div class="copyright">{footer.copyright && parse(footer.copyright)}</div>
+        <div class="copyright">{footer.copyright && <span {...footer?.$?.copyright}>{parse(footer.copyright)}</span>}</div>
       </footer>
     );
   }
