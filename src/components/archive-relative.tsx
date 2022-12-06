@@ -2,15 +2,32 @@
 import { parse } from '@saasquatch/stencil-html-parser';
 import { h, Fragment } from '@stencil/core';
 
-export default function ArchiveRelative(props) {
+type AdditionalParam = {
+  title: {};
+  body: {};
+  url: string;
+}
+
+type Data = {
+  url: string;
+  body: string;
+  title: string;
+  $: AdditionalParam;
+}
+
+type BlogListProps = {
+  blogs: [Data];
+}
+
+export default function ArchiveRelative(props: BlogListProps) {
   const { blogs } = props;
   return (
     <Fragment>
-      {blogs?.map((blog: any, idx: any) => (
-        <a href={blog.url} key={idx}>
+      {blogs?.map((blog, idx: number) => (
+        <a href={blog.url} {...blog.$?.url} key={idx}>
           <div>
-            <h4>{blog.title}</h4>
-            {parse(blog.body.slice(0, 80))}
+            <h4 {...blog.$?.title}>{blog.title}</h4>
+            {<div {...blog.$?.body}>{parse(blog.body.slice(0, 80))}</div>}
           </div>
         </a>
       ))}
