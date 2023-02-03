@@ -1,11 +1,11 @@
-import fs from 'fs';
+import fs from 'node:fs';
 
 // directory path
 const dir = 'www';
 
 // delete directory recursively
 try {
-  fs.rmdirSync(dir, { recursive: true });
+  fs.rm(dir, { recursive: true }, () => {});
 
   console.log(`${dir} is deleted!`);
 } catch (err) {
