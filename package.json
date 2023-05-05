@@ -1,14 +1,14 @@
 {
   "name": "contentstack-stenciljs-starter-app",
   "private": true,
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A simple starter app build using Stencil Js and Contentstack",
   "type": "module",
   "author": "Contentstack",
   "scripts": {
     "prebuild": "node ./scripts/rm-www.js",
     "build": "stencil build",
-    "start": "stencil build --dev --watch --serve --port 3000",
+    "start": "stencil build --dev --watch --serve",
     "test": "stencil test --spec --e2e",
     "test.watch": "stencil test --spec --e2e --watchAll",
     "generate": "stencil generate",
