@@ -1,7 +1,13 @@
 import Stack from '../sdk-plugin';
 import { addEditableTags } from '@contentstack/utils';
+import { Env } from '@stencil/core';
 
-const liveEdit = process.env.CONTENTSTACK_LIVE_EDIT_TAGS === 'true';
+let liveEdit = false;
+if (Object.keys(Env).length > 0) {
+  liveEdit = Env.CONTENTSTACK_LIVE_EDIT_TAGS === 'true';
+} else {
+  liveEdit = process.env.CONTENTSTACK_LIVE_EDIT_TAGS === 'true';
+}
 
 export const getHeaderRes = async () => {
   const response = await Stack.getEntry({
