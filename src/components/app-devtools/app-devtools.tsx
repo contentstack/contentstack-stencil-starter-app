@@ -1,6 +1,7 @@
 import { h, Component, State, Prop } from '@stencil/core';
 import store from '../../store/state';
 import '@alenaksu/json-viewer';
+import { isEmpty } from "lodash";
 
 function filterObject(inputObject: any) {
   const unWantedProps = ['uid', '_version', 'ACL', '_in_progress', 'created_at', 'created_by', 'updated_at', 'updated_by', 'publish_details'];
@@ -30,9 +31,9 @@ export class AppDevtools {
     const footer = store.get('footer');
     let jsonData = { header, footer };
 
-    this.page && Object.keys(this.page).length && (jsonData['page'] = this.page);
-    this.blogList && Object.keys(this.blogList).length && (jsonData['blogList'] = this.blogList);
-    this.blogPost && Object.keys(this.blogPost).length && (jsonData['blogPost'] = this.blogPost);
+    this.page && !isEmpty(this.page) && (jsonData['page'] = this.page);
+    this.blogList && !isEmpty(this.blogList) && (jsonData['blogList'] = this.blogList);
+    this.blogPost && !isEmpty(this.blogPost) && (jsonData['blogPost'] = this.blogPost);
     jsonData = filterObject(jsonData);
     this.internalProps = {
       jsonData: JSON.stringify(jsonData),

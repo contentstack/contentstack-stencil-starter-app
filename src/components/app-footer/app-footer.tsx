@@ -3,7 +3,8 @@ import { parse } from '@saasquatch/stencil-html-parser';
 import { onEntryChange } from '../../sdk-plugin/index';
 import store from '../../store/state';
 import { getFooterRes, getAllEntries } from '../../helper';
-import { Entry, FooterProps, Menu, Social } from '../../typescript/layout';
+import { Menu, PageProps, Social } from '../../typescript/layout';
+import { FooterRes } from "../../typescript/response";
 
 @Component({
   tag: 'app-footer',
@@ -16,21 +17,20 @@ export class AppFooter {
   };
   @State() error: string;
 
-  buildNavigation(ent: Entry, ft: FooterProps) {
-    let newFooter = { ...ft };
-    if (ent.length !== newFooter.navigation.link.length) {
-      ent.forEach(entry => {
-        const fFound = newFooter?.navigation.link.find(nlink => nlink.title === entry.title);
+  buildNavigation(entries: PageProps[], footerRes: FooterRes) {
+    const navFooterList = footerRes.navigation.link;
+    if (entries.length !== footerRes.navigation.link.length) {
+      entries.forEach((entry) => {
+        const fFound = footerRes.navigation.link.find(
+          (link) => link.title === entry.title
+        );
         if (!fFound) {
-          newFooter.navigation.link?.push({
-            title: entry.title,
-            href: entry.url,
-            $: entry.$,
-          });
+          navFooterList.push({ title: entry.title, href: entry.url });
         }
       });
+      footerRes.navigation.link = navFooterList
     }
-    return newFooter;
+    return footerRes;
   }
 
   componentWillLoad() {

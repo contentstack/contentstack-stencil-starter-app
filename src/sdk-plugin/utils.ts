@@ -1,5 +1,5 @@
 import contentstack from "contentstack"
-export const customHostUrl = (baseUrl: string): string => {
+export const customHostUrl = (baseUrl: string=""): string => {
   return baseUrl.replace("api", "cdn");
 };
 // generate prod api urls

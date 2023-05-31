@@ -1,25 +1,12 @@
+/* eslint-disable @stencil/own-methods-must-be-private */
+/* eslint-disable @stencil/strict-boolean-conditions */
 import { Component, State, h, Prop } from '@stencil/core';
 import { parse } from '@saasquatch/stencil-html-parser';
 import { onEntryChange } from '../../sdk-plugin/index';
 import store from '../../store/state';
-import { getHeaderRes } from '../../helper';
-import { HeaderProps, HeaderMenu } from '../../typescript/layout';
-
-type AdditionalParam = {
-  title: string;
-  copyright: string;
-  announcement_text: string;
-  label: string;
-  url: string;
-  body: string;
-  href: string;
-}
-
-type Entry = {
-  title: string;
-  url: string;
-  $: AdditionalParam;
-}
+import { getAllEntries, getHeaderRes } from '../../helper';
+import { HeaderMenu, PageProps } from '../../typescript/layout';
+import { HeaderRes } from "../../typescript/response";
 
 @Component({
   tag: 'app-header',
@@ -27,27 +14,30 @@ type Entry = {
 })
 export class AppHeader {
   @Prop() header: {};
-  @Prop() entries: {};
+  @Prop() entries:{};
   @State() internalProps: any = {
     header: {},
   };
   @State() error: string;
 
-  buildNavigation(ent, hd: HeaderProps) {
-    let newHeader = { ...hd };
-    if (ent.length !== newHeader.navigation_menu.length) {
-      ent.forEach((entry: Entry) => {
-        const hFound = newHeader?.navigation_menu.find(navLink => navLink.label === entry.title);
+  buildNavigation(entries:PageProps[], headerRes: HeaderRes) {
+    const navHeaderList = headerRes.navigation_menu;
+    if (entries.length !== headerRes.navigation_menu.length) {
+      entries.forEach((entry) => {
+        const hFound = headerRes.navigation_menu.find(
+          (navLink) => navLink.page_reference[0].title === entry.title
+        );
+
         if (!hFound) {
-          newHeader.navigation_menu?.push({
+          navHeaderList.push({
             label: entry.title,
-            page_reference: [{ title: entry.title, url: entry.url, $: entry.$ }],
-            $: {},
+            page_reference: [{ title: entry.title, url: entry.url }],
           });
         }
       });
     }
-    return newHeader;
+    headerRes.navigation_menu = navHeaderList;
+    return headerRes;
   }
 
   componentWillLoad() {
@@ -58,7 +48,8 @@ export class AppHeader {
     try {
       onEntryChange(async () => {
         const header = await getHeaderRes();
-        const newHeader = this.buildNavigation(this.entries, header);
+        const entries = await getAllEntries();
+         const newHeader = this.buildNavigation(entries, header);
         store.set('header', newHeader);
 
         this.internalProps = {

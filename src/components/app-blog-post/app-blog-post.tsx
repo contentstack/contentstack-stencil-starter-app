@@ -8,6 +8,7 @@ import { parse } from '@saasquatch/stencil-html-parser';
 import Helmet from '@stencil/helmet';
 import { metaData } from '../../utils/common';
 import { getPageRes, getBlogPostRes } from '../../helper';
+import { isEmpty } from "lodash";
 
 @Component({
   tag: 'app-blog-post',
@@ -81,7 +82,7 @@ export class AppBlogPost {
           </div>
           <div class="blog-column-right">
             <div class="related-post">
-              {Object.keys(banner).length && banner.page_components && <h2 {...banner.page_components[2].widget.$?.title_h2}>{banner.page_components[2].widget.title_h2}</h2>}
+              {!isEmpty(banner) && banner.page_components && <h2 {...banner.page_components[2].widget.$?.title_h2}>{banner.page_components[2].widget.title_h2}</h2>}
               {result?.related_post && <ArchiveRelative blogs={result.related_post} />}
             </div>
           </div>

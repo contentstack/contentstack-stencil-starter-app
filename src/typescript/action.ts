@@ -16,3 +16,8 @@ export type Image = {
     title: string;
     $: Image;
 }
+
+export type Link = {
+    title: string
+    href: string
+  }
