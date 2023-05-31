@@ -16,7 +16,6 @@ type BannerProps = {
   key: string;
 }
 
-/* eslint-disable camelcase */
 export default function BlogBanner(props: BannerProps) {
   const { blog_banner } = props;
   return (

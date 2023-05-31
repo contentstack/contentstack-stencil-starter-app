@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import { parse } from '@saasquatch/stencil-html-parser';
 import { h, Fragment } from '@stencil/core';
 
@@ -24,7 +23,7 @@ export default function ArchiveRelative(props: BlogListProps) {
   return (
     <Fragment>
       {blogs?.map((blog, idx: number) => (
-        <a href={blog.url} {...blog.$?.url} key={idx}>
+        <a href={blog.url} {...blog.$?.url as {}} key={idx}>
           <div>
             <h4 {...blog.$?.title}>{blog.title}</h4>
             {<div {...blog.$?.body}>{parse(blog.body.slice(0, 80))}</div>}
