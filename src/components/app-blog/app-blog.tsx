@@ -1,4 +1,3 @@
-/* eslint-disable @stencil/required-jsdoc */
 import { Prop, h, State, Component } from '@stencil/core';
 import { MatchResults } from '@stencil/router';
 import { onEntryChange } from '../../sdk-plugin/index';
@@ -10,6 +9,7 @@ import Helmet from '@stencil/helmet';
 import { metaData } from '../../utils/common';
 import { getPageRes, getBlogListRes } from '../../helper';
 import { Image } from '../../typescript/action';
+import {isEmpty} from "lodash"
 
 type Result = {
   is_archived: boolean;
@@ -138,7 +138,7 @@ export class AppBlog {
               ))}
           </div>
           <div class="blog-column-right">
-            {Object.keys(blog).length && blog.page_components && <h2>{blog.page_components[1].widget.title_h2}</h2>}
+            { !isEmpty(blog) && blog.page_components && <h2>{blog.page_components[1].widget.title_h2}</h2>}
             <ArchiveRelative blogs={archived} />
           </div>
         </div>

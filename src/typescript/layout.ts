@@ -65,7 +65,7 @@ export type Links = {
     label?: string;
     title: string;
     href: string;
-    $:AdditionalParam;
+    $?:AdditionalParam;
   }
   
 export type Menu = {

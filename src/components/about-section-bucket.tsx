@@ -10,7 +10,7 @@ type BucketProps = {
 function bucketContent(bucket: BucketList, index: number) {
   return (
     <div class="mission-content-section" key={index}>
-      {bucket.icon && <img class="mission-icon" {...bucket.icon.$} src={bucket.icon.url} alt="art work" />}
+      {bucket.icon && <img class="mission-icon" {...bucket.icon.$?.url as {}} src={bucket.icon.url} alt="art work" />}
 
       <div class="mission-section-content">
         {bucket.title_h3 && <h3 {...bucket.$?.title_h3 as {}}>{bucket.title_h3}</h3>}
