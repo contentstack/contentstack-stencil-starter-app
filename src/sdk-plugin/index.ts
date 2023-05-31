@@ -2,6 +2,7 @@ import contentstack from 'contentstack';
 import * as Utils from '@contentstack/utils';
 import { Env } from '@stencil/core';
 import ContentstackLivePreview from '@contentstack/live-preview-utils';
+import { customHostUrl, isValidCustomHostUrl } from './utils';
 
 let stackConfig, hostUrl;
 if (Object.keys(Env).length > 0) {
@@ -39,9 +40,11 @@ if (Object.keys(Env).length > 0) {
   };
   hostUrl = process.env.CONTENTSTACK_API_HOST;
 }
-
 const Stack = contentstack.Stack(stackConfig);
-Stack.setHost(hostUrl);
+hostUrl = customHostUrl(hostUrl);
+if (isValidCustomHostUrl(hostUrl)) {
+  Stack.setHost(hostUrl);
+}
 
 ContentstackLivePreview.init({
   ssr: false,
@@ -50,7 +53,7 @@ ContentstackLivePreview.init({
   clientUrlParams: {
     host: stackConfig.clientUrlParams.host,
   },
-});
+}).catch(err => console.error(err));
 
 const renderOption = {
   ['span']: (node, next) => {
@@ -73,7 +76,6 @@ export default {
       const query = Stack.ContentType(contentTypeUid).Query();
       if (referenceFieldPath) query.includeReference(referenceFieldPath);
       query
-        .includeOwner()
         .toJSON()
         .find()
         .then(
@@ -106,7 +108,7 @@ export default {
     return new Promise((resolve, reject) => {
       const blogQuery = Stack.ContentType(contentTypeUid).Query();
       if (referenceFieldPath) blogQuery.includeReference(referenceFieldPath);
-      blogQuery.includeOwner().toJSON();
+      blogQuery.toJSON();
       const data = blogQuery.where('url', `${entryUrl}`).find();
       data.then(
         result => {

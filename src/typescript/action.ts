@@ -14,5 +14,5 @@ export type Image = {
     filename: string;
     url: string;
     title: string;
-    $: AdditionalParam;
+    $: Image;
 }
