@@ -1,4 +1,4 @@
-import { Component, Prop, h, State } from '@stencil/core';
+import { Prop, h, State, Component } from '@stencil/core';
 import { MatchResults } from '@stencil/router';
 import { onEntryChange } from '../../sdk-plugin/index';
 import RenderComponents from '../../components/render-components';
@@ -9,6 +9,7 @@ import Helmet from '@stencil/helmet';
 import { metaData } from '../../utils/common';
 import { getPageRes, getBlogListRes } from '../../helper';
 import { Image } from '../../typescript/action';
+import {isEmpty} from "lodash"
 
 type Result = {
   is_archived: boolean;
@@ -42,9 +43,9 @@ export class AppBlog {
   @Prop() match: MatchResults;
 
   @State() internalProps: any = {
-    archived: [],
+    archived: [] as BlogList[],
     blog: {},
-    blogList: [],
+    blogList: [] as BlogList[],
   };
   @State() error: string;
 
@@ -98,11 +99,12 @@ export class AppBlog {
 
   render() {
     const { archived, blog, blogList } = this.internalProps;
+    
     return (
       <div>
         <Helmet>{blog.seo && blog.seo.enable_search_indexing ? metaData(blog.seo) : null}</Helmet>
         {blog && <app-devtools page={blog} blogList={blogList.concat(archived)} />}
-        {blog !== {} && blog.page_components && <RenderComponents pageComponents={blog.page_components} blogsPage />}
+        {blog.page_components && <RenderComponents pageComponents={blog.page_components} blogsPage />}
 
         <div class="blog-container">
           <div class="blog-column-left">
@@ -111,7 +113,7 @@ export class AppBlog {
                 <div class="blog-list" key={index}>
                   {bloglist.featured_image && (
                     <a href={bloglist.url}>
-                      <img alt="blog img" class="blog-list-img" {...bloglist.featured_image.$?.url} src={bloglist.featured_image.url} />
+                      <img alt="blog img" class="blog-list-img" {...bloglist.featured_image.$?.url as {}} src={bloglist.featured_image.url} />
                     </a>
                   )}
                   <div class="blog-content">
@@ -136,7 +138,7 @@ export class AppBlog {
               ))}
           </div>
           <div class="blog-column-right">
-            {blog !== {} && blog.page_components && <h2>{blog.page_components[1].widget.title_h2}</h2>}
+            { !isEmpty(blog) && blog.page_components && <h2>{blog.page_components[1].widget.title_h2}</h2>}
             <ArchiveRelative blogs={archived} />
           </div>
         </div>
