@@ -1,6 +1,7 @@
 import { Component, Fragment, h, State } from '@stencil/core';
 import { getHeaderRes, getFooterRes, getAllEntries } from '../../helper';
-import { Entry, HeaderProps, FooterProps } from "../../typescript/layout";
+import { PageProps } from "../../typescript/layout";
+import { FooterRes, HeaderRes } from "../../typescript/response";
 
 @Component({
   tag: 'app-root',
@@ -9,7 +10,7 @@ import { Entry, HeaderProps, FooterProps } from "../../typescript/layout";
 export class AppRoot {
   @State() layout = { header: {}, footer: {}, entries: {} };
 
-  buildNavigation(ent: Entry, hd: HeaderProps, ft: FooterProps) {
+  buildNavigation(ent: PageProps[], hd: HeaderRes, ft: FooterRes) {
     let newHeader = { ...hd };
     let newFooter = { ...ft };
     if (ent.length !== newHeader.navigation_menu.length) {
@@ -18,8 +19,7 @@ export class AppRoot {
         if (!hFound) {
           newHeader.navigation_menu?.push({
             label: entry.title,
-            page_reference: [{ title: entry.title, url: entry.url, $: entry.$ }],
-            $: {},
+            page_reference: [{ title: entry.title, url: entry.url }],
           });
         }
         const fFound = newFooter?.navigation.link.find(nlink => nlink.title === entry.title);
@@ -27,7 +27,6 @@ export class AppRoot {
           newFooter.navigation.link?.push({
             title: entry.title,
             href: entry.url,
-            $: entry.$,
           });
         }
       });

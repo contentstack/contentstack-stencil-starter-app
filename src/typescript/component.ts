@@ -1,36 +1,20 @@
 import { Action, Image } from "./action";
 
-type AdditionalParam = {
-  title: {};
-  title_h2: {};
-  title_h3: string;
-  description: string;
-  banner_title: string;
-  banner_description: string;
-  designation: string;
-  name: string;
-  html_code: string;
-  body: {};
-  href: string;
-}
-
 type Employee = {
   image: Image;
   name: string;
   designation: string;
-  $: AdditionalParam;
+  $: Employee;
 }
 
-export type BucketList = [
-  BucketArray:{
+export type BucketList = {
     title_h3: string;
     description: string;
     url: string;
     call_to_action: Action;
     icon: Image;
-    $: AdditionalParam;
-  }
-]
+    $: BucketList;
+}
 
 export type Card = {
   cards: [CardData]
@@ -40,13 +24,13 @@ export type CardData = {
   title_h3: string,
   description: string,
   call_to_action: Action,
-  $: AdditionalParam
+  $: CardData
 }
 
 type Article = {
   href: string;
   title: string;
-  $: AdditionalParam;
+  $: Article;
 }
 
 type FeaturedBlog = [
@@ -55,33 +39,38 @@ type FeaturedBlog = [
     featured_image: Image;
     body: string;
     url: string;
-    $: AdditionalParam;
+    $: {
+      title:string;
+      featured_image:Image;
+      body:string;
+      url:string;
+    };
   }
 ]
 
 export type Widget = {
   title_h2: string;
   type?: string;
-  $: AdditionalParam;
+  $: Widget;
 }
 
 export type Component = {
-  hero_banner: Banner;
-  section: SectionProps;
-  section_with_buckets: SectionWithBucket;
-  from_blog: FeaturedBlogData;
-  section_with_cards: Card;
-  section_with_html_code: ObjectProps;
-  our_team: TeamProps;
-  widget: Widget;
+  hero_banner: Banner | null;
+  section: SectionProps | null;
+  section_with_buckets: SectionWithBucket | null;
+  from_blog: FeaturedBlogData | null;
+  section_with_cards: Card | null;
+  section_with_html_code: ObjectProps | null;
+  our_team: TeamProps | null;
+  widget: Widget | null;
 }
 
 export type SectionWithBucket = {
     bucket_tabular: boolean
     title_h2: string;
-    buckets: BucketList;
+    buckets: BucketList[];
     description: string;
-    $: AdditionalParam;
+    $: SectionWithBucket;
   }
   
 export type Banner = {
@@ -91,13 +80,13 @@ export type Banner = {
     call_to_action: Action;
     banner_image: Image;
     text_color: string;
-    $: AdditionalParam;
+    $: Banner;
   }
   
 export type ObjectProps = {
     html_code_alignment: string;
     title: string;
-    $: AdditionalParam;
+    $: ObjectProps;
     description: string;
     html_code: string;
   }
@@ -108,13 +97,13 @@ export type SectionProps = {
     call_to_action: Action;
     image: Image;
     image_alignment: string;
-    $: AdditionalParam;
+    $: SectionProps;
   } 
   
 export type TeamProps = {
     title_h2: string;
     description: string;
-    $: AdditionalParam;
+    $: TeamProps;
     employees: [Employee];
   }
   
@@ -122,7 +111,7 @@ export type FeaturedBlogData = {
     title_h2: string;
     view_articles: Article;
     featured_blogs: FeaturedBlog;
-    $: AdditionalParam;
+    $: FeaturedBlogData;
 }
 
 export type RenderProps = {
