@@ -1,5 +1,3 @@
-/* eslint-disable @stencil/own-methods-must-be-private */
-/* eslint-disable @stencil/strict-boolean-conditions */
 import { Component, State, h, Prop } from '@stencil/core';
 import { parse } from '@saasquatch/stencil-html-parser';
 import { onEntryChange } from '../../sdk-plugin/index';
