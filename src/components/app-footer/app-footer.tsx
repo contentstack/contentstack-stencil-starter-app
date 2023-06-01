@@ -5,6 +5,7 @@ import store from '../../store/state';
 import { getFooterRes, getAllEntries } from '../../helper';
 import { Menu, PageProps, Social } from '../../typescript/layout';
 import { FooterRes } from "../../typescript/response";
+import { filter } from "lodash";
 
 @Component({
   tag: 'app-footer',
@@ -21,10 +22,8 @@ export class AppFooter {
     const navFooterList = footerRes.navigation.link;
     if (entries.length !== footerRes.navigation.link.length) {
       entries.forEach((entry) => {
-        const fFound = footerRes.navigation.link.find(
-          (link) => link.title === entry.title
-        );
-        if (!fFound) {
+        const footerFound = filter(footerRes.navigation.link, (link)=> link.title === entry.title)
+        if (!footerFound) {
           navFooterList.push({ title: entry.title, href: entry.url });
         }
       });
@@ -42,7 +41,7 @@ export class AppFooter {
       onEntryChange(async () => {
         const footer = await getFooterRes();
         const allEntry = await getAllEntries();
-        const newFooter = await this.buildNavigation(allEntry, footer);
+        const newFooter = this.buildNavigation(allEntry, footer);
         store.set('footer', newFooter);
         this.internalProps = {
           footer: footer,
