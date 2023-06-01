@@ -5,6 +5,7 @@ import store from '../../store/state';
 import { getAllEntries, getHeaderRes } from '../../helper';
 import { HeaderMenu, PageProps } from '../../typescript/layout';
 import { HeaderRes } from "../../typescript/response";
+import { find } from "lodash";
 
 @Component({
   tag: 'app-header',
@@ -22,11 +23,8 @@ export class AppHeader {
     const navHeaderList = headerRes.navigation_menu;
     if (entries.length !== headerRes.navigation_menu.length) {
       entries.forEach((entry) => {
-        const hFound = headerRes.navigation_menu.find(
-          (navLink) => navLink.page_reference[0].title === entry.title
-        );
-
-        if (!hFound) {
+        const headerFound = find(headerRes.navigation_menu, (navLink)=> navLink.page_reference[0].title === entry.title)
+        if (!headerFound) {
           navHeaderList.push({
             label: entry.title,
             page_reference: [{ title: entry.title, url: entry.url }],
