@@ -1,42 +1,20 @@
-/* eslint-disable no-undef */
 import { parse } from '@saasquatch/stencil-html-parser';
 import { h } from '@stencil/core';
-import { Image } from '../typescript/action';
-import { BucketList } from '../typescript/component';
-
-type AdditionalParam = {
-  title_h2: {};
-  title_h3: {};
-  description: {};
-}
-
-type Bucket = {
-  title_h3: string;
-  description: string;
-  icon: Image;
-  $: AdditionalParam;
-}
-
-type Data = {
-  title_h2: string;
-  description: string;
-  buckets: BucketList;
-  $: AdditionalParam;
-}
+import { BucketList, SectionWithBucket } from "../typescript/component";
 
 type BucketProps = {
-  sectionWithBuckets: Data;
+  sectionWithBuckets: SectionWithBucket;
   key: string;
 }
 
-function bucketContent(bucket: Bucket, index: number) {
+function bucketContent(bucket: BucketList, index: number) {
   return (
     <div class="mission-content-section" key={index}>
-      {bucket.icon && <img class="mission-icon" {...bucket.icon.$?.url} src={bucket.icon.url} alt="art work" />}
+      {bucket.icon && <img class="mission-icon" {...bucket.icon.$?.url as {}} src={bucket.icon.url} alt="art work" />}
 
       <div class="mission-section-content">
-        {bucket.title_h3 && <h3 {...bucket.$?.title_h3}>{bucket.title_h3}</h3>}
-        <span {...bucket.$?.description}>{bucket.description && parse(bucket.description)}</span>
+        {bucket.title_h3 && <h3 {...bucket.$?.title_h3 as {}}>{bucket.title_h3}</h3>}
+        <span {...bucket.$?.description as {}}>{bucket.description && parse(bucket.description)}</span>
       </div>
     </div>
   );
@@ -48,7 +26,7 @@ export default function AboutSectionBucket(props: BucketProps) {
   return (
     <div class="member-main-section">
       <div class="member-head">
-        {sectionWithBuckets.title_h2 && <h2 {...sectionWithBuckets.$?.title_h2}>{sectionWithBuckets.title_h2}</h2>}
+        {sectionWithBuckets.title_h2 && <h2 {...sectionWithBuckets.$?.title_h2 as {}}>{sectionWithBuckets.title_h2}</h2>}
         {sectionWithBuckets.description && <p>{sectionWithBuckets.description}</p>}
       </div>
       <div class="mission-section">
