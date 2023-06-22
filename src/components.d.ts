@@ -6,6 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { MatchResults, RouterHistory } from "@stencil/router";
+export { MatchResults, RouterHistory } from "@stencil/router";
 export namespace Components {
     interface AppBlog {
         "match": MatchResults;
