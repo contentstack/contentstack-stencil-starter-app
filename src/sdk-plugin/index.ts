@@ -14,9 +14,9 @@ if (!isEmpty(Env)) {
     branch: Env.CONTENTSTACK_BRANCH,
     region: Env.CONTENTSTACK_REGION,
     live_preview: {
-      host: Env.CONTENTSTACK_API_HOST,
+      host: Env.CONTENTSTACK_PREVIEW_HOST,
       enable: Env.CONTENTSTACK_LIVE_PREVIEW === 'true',
-      management_token: Env.CONTENTSTACK_MANAGEMENT_TOKEN,
+      preview_token: Env.CONTENTSTACK_PREVIEW_TOKEN,
     },
     clientUrlParams: {
       host: Env.CONTENTSTACK_APP_HOST,
@@ -31,9 +31,9 @@ if (!isEmpty(Env)) {
     branch: process.env.CONTENTSTACK_BRANCH,
     region: process.env.CONTENTSTACK_REGION,
     live_preview: {
-      host: process.env.CONTENTSTACK_API_HOST,
+      host: process.env.CONTENTSTACK_PREVIEW_HOST,
       enable: process.env.CONTENTSTACK_LIVE_PREVIEW === 'true',
-      management_token: process.env.CONTENTSTACK_MANAGEMENT_TOKEN,
+      preview_token: process.env.CONTENTSTACK_PREVIEW_TOKEN,
     },
     clientUrlParams: {
       host: process.env.CONTENTSTACK_APP_HOST,
@@ -42,8 +42,8 @@ if (!isEmpty(Env)) {
   hostUrl = process.env.CONTENTSTACK_API_HOST;
 }
 const Stack = contentstack.Stack(stackConfig);
-hostUrl = customHostUrl(hostUrl);
-if (isValidCustomHostUrl(hostUrl)) {
+hostUrl = hostUrl ? customHostUrl(hostUrl) : '';
+if (hostUrl && isValidCustomHostUrl(hostUrl)) {
   Stack.setHost(hostUrl);
 }
 
@@ -51,9 +51,6 @@ ContentstackLivePreview.init({
   ssr: false,
   //@ts-ignore
   stackSdk: Stack,
-  clientUrlParams: {
-    host: stackConfig.clientUrlParams.host,
-  },
 }).catch(err => console.error(err));
 
 const renderOption = {
