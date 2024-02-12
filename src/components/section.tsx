@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import { h } from '@stencil/core';
 import { Action, Image } from "../typescript/action";
 
@@ -30,7 +29,7 @@ export default function Section(props: BucketProps) {
         {section.title_h2 && <h2 {...section.$?.title_h2}>{section.title_h2}</h2>}
         {section.description && <p {...section.$?.description}>{section.description}</p>}
         {section.call_to_action.title && section.call_to_action.href ? (
-          <a {...section.call_to_action.$?.href} href={section.call_to_action.href} class="btn secondary-btn">
+          <a {...section.call_to_action.$?.href as {}} href={section.call_to_action.href} class="btn secondary-btn">
             {section.call_to_action.title}
           </a>
         ) : (
@@ -41,7 +40,7 @@ export default function Section(props: BucketProps) {
   }
 
   function imageContent(key: string) {
-    return <img {...section.image.$?.url} src={section.image.url} alt={section.image.filename} key={key} />;
+    return <img {...section.image.$?.url as {}} src={section.image.url} alt={section.image.filename} key={key} />;
   }
 
   return (

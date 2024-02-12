@@ -1,41 +1,50 @@
-import Stack from '../sdk-plugin';
+import {getEntry, getEntryByUrl} from '../sdk-plugin';
 import { addEditableTags } from '@contentstack/utils';
+import { Env } from '@stencil/core';
+import { isEmpty } from "lodash";
+import { FooterRes, HeaderRes } from "../typescript/response";
+import { PageProps } from "../typescript/layout";
 
-const liveEdit = process.env.CONTENTSTACK_LIVE_EDIT_TAGS === 'true';
+let liveEdit = false;
+if (!isEmpty(Env)) {
+  liveEdit = Env.CONTENTSTACK_LIVE_EDIT_TAGS === 'true';
+} else {
+  liveEdit = process.env.CONTENTSTACK_LIVE_EDIT_TAGS === 'true';
+}
 
-export const getHeaderRes = async () => {
-  const response = await Stack.getEntry({
+export const getHeaderRes = async ():Promise<HeaderRes> => {
+  const response = await getEntry({
     contentTypeUid: 'header',
     referenceFieldPath: ['navigation_menu.page_reference'],
     jsonRtePath: ['notification_bar.announcement_text'],
-  });
+  }) as HeaderRes[][];
 
   liveEdit && addEditableTags(response[0][0], 'header', true);
   return response[0][0];
 };
 
-export const getFooterRes = async () => {
-  const response = await Stack.getEntry({
+export const getFooterRes = async ():Promise<FooterRes> => {
+  const response = await getEntry({
     contentTypeUid: 'footer',
     referenceFieldPath: undefined,
     jsonRtePath: ['copyright'],
-  });
+  }) as FooterRes[][];
   liveEdit && addEditableTags(response[0][0], 'footer', true);
   return response[0][0];
 };
 
-export const getAllEntries = async () => {
-  const response = await Stack.getEntry({
+export const getAllEntries = async ():Promise<PageProps[]> => {
+  const response = await getEntry({
     contentTypeUid: 'page',
     referenceFieldPath: undefined,
     jsonRtePath: undefined,
-  });
+  }) as PageProps[][];
   liveEdit && response[0].forEach(entry => addEditableTags(entry, 'page', true));
   return response[0];
 };
 
-export const getPageRes = async entryUrl => {
-  const response = await Stack.getEntryByUrl({
+export const getPageRes = async (entryUrl):Promise<PageProps> => {
+  const response = await getEntryByUrl({
     contentTypeUid: 'page',
     entryUrl,
     referenceFieldPath: ['page_components.from_blog.featured_blogs'],
@@ -44,13 +53,13 @@ export const getPageRes = async entryUrl => {
       'page_components.section_with_buckets.buckets.description',
       'page_components.section_with_html_code.description',
     ],
-  });
+  }) as PageProps[];
   liveEdit && addEditableTags(response[0], 'page', true);
   return response[0];
 };
 
 export const getBlogListRes = async () => {
-  const response = await Stack.getEntry({
+  const response = await getEntry({
     contentTypeUid: 'blog_post',
     referenceFieldPath: ['author', 'related_post'],
     jsonRtePath: ['body'],
@@ -60,7 +69,7 @@ export const getBlogListRes = async () => {
 };
 
 export const getBlogPostRes = async entryUrl => {
-  const response = await Stack.getEntryByUrl({
+  const response = await getEntryByUrl({
     contentTypeUid: 'blog_post',
     entryUrl,
     referenceFieldPath: ['author', 'related_post'],
