@@ -68,7 +68,7 @@ export class AppFooter {
             <nav>
               <ul class="nav-ul">
                 {footer.navigation?.link.map((menu: Menu) => (
-                  <li class="footer-nav-li" key={menu.title} {...menu?.$?.href}>
+                  <li class="footer-nav-li" key={menu.title} {...(typeof menu?.$?.href === 'object' ? menu.$?.href : {})}>
                     <stencil-route-link url={menu.href}>{menu.title}</stencil-route-link>
                   </li>
                 ))}
@@ -79,7 +79,7 @@ export class AppFooter {
             <div class="social-nav">
               {footer.social?.social_share.map((social: Social) => (
                 <a href={social.link.href} title={social.link.title} key={social.link.title}>
-                  {social.icon && <img {...social.icon?.$?.url} src={social.icon.url} alt={social.link.title} />}
+                  {social.icon && <img {...(typeof social.icon?.$?.url === 'object' ? social.icon.$?.url : {})} src={social.icon.url} alt={social.link.title} />}
                 </a>
               ))}
             </div>

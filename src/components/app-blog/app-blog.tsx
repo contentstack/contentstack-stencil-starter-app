@@ -12,17 +12,17 @@ import { Image } from '../../typescript/action';
 
 type Result = {
   is_archived: boolean;
-}
+};
 
 type AdditionalParam = {
   title: {};
   date: {};
   body: {};
-}
+};
 
 type Author = {
   title: string;
-}
+};
 
 type BlogList = {
   featured_image: Image;
@@ -32,7 +32,7 @@ type BlogList = {
   body: string;
   author: Author[];
   $: AdditionalParam;
-}
+};
 
 @Component({
   tag: 'app-blog',
@@ -102,7 +102,7 @@ export class AppBlog {
       <div>
         <Helmet>{blog.seo && blog.seo.enable_search_indexing ? metaData(blog.seo) : null}</Helmet>
         {blog && <app-devtools page={blog} blogList={blogList.concat(archived)} />}
-        {blog !== {} && blog.page_components && <RenderComponents pageComponents={blog.page_components} blogsPage />}
+        {Object.keys(blog).length > 0 && blog.page_components && <RenderComponents pageComponents={blog.page_components} blogsPage />}
 
         <div class="blog-container">
           <div class="blog-column-left">
@@ -111,7 +111,12 @@ export class AppBlog {
                 <div class="blog-list" key={index}>
                   {bloglist.featured_image && (
                     <a href={bloglist.url}>
-                      <img alt="blog img" class="blog-list-img" {...bloglist.featured_image.$?.url} src={bloglist.featured_image.url} />
+                      <img
+                        alt="blog img"
+                        class="blog-list-img"
+                        {...(typeof bloglist.featured_image.$?.url === 'object' ? bloglist.featured_image.$?.url : {})}
+                        src={bloglist.featured_image.url}
+                      />
                     </a>
                   )}
                   <div class="blog-content">
@@ -136,7 +141,8 @@ export class AppBlog {
               ))}
           </div>
           <div class="blog-column-right">
-            {blog !== {} && blog.page_components && <h2>{blog.page_components[1].widget.title_h2}</h2>}
+            {Object.keys(blog).length > 0 && blog.page_components && <h2>{blog.page_components[1].widget.title_h2}</h2>}
+
             <ArchiveRelative blogs={archived} />
           </div>
         </div>

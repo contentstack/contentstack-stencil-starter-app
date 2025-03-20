@@ -81,7 +81,11 @@ export class AppBlogPost {
           </div>
           <div class="blog-column-right">
             <div class="related-post">
-              {banner != {} && banner.page_components && <h2 {...banner.page_components[2].widget.$?.title_h2}>{banner.page_components[2].widget.title_h2}</h2>}
+            {Object.keys(banner).length > 0 && banner.page_components && 
+  <h2 {...(typeof banner.page_components[2].widget.$?.title_h2 === 'object' ? banner.page_components[2].widget.$?.title_h2 : {})}>
+    {banner.page_components[2].widget.title_h2}
+  </h2>
+}
               {result?.related_post && <ArchiveRelative blogs={result.related_post} />}
             </div>
           </div>
