@@ -55,9 +55,6 @@ function bucketContent(bucket: Bucket, index: number) {
 
 export default function AboutSectionBucket(props: BucketProps) {
   const { sectionWithBuckets } = props;
-
-
-  console.log("sectionWithBuckets", sectionWithBuckets)
   return (
     <div class="member-main-section">
       <div class="member-head">
