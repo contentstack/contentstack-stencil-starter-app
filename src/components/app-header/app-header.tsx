@@ -91,8 +91,8 @@ export class AppHeader {
           <nav class="menu">
             <ul class="nav-ul header-ul">
               {header.navigation_menu?.map((list: HeaderMenu) => (
-                <li key={list.label} class="nav-li" {...list.page_reference[0]?.$?.url}>
-                  <stencil-route-link url={list.page_reference[0].url} exact activeClass={'active'}>
+                <li key={list.label} class="nav-li" {...(typeof list.page_reference[0]?.$?.url === 'object' ? list.page_reference[0].$?.url : {})}>
+                <stencil-route-link url={list.page_reference[0].url} exact activeClass={'active'}>
                     {list.label}
                   </stencil-route-link>
                 </li>

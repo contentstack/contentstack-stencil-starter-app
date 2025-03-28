@@ -1,12 +1,12 @@
 /* eslint-disable eqeqeq */
 
 import { h } from '@stencil/core';
-import { Action, Image } from "../typescript/action";
+import { Action, Image } from '../typescript/action';
 
 type AdditionalParam = {
   banner_title: {};
   banner_description: {};
-}
+};
 
 type Data = {
   bg_color: string;
@@ -16,11 +16,11 @@ type Data = {
   call_to_action: Action;
   banner_image: Image;
   $: AdditionalParam;
-}
+};
 
 type BannerProps = {
   banner: Data;
-}
+};
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 export default function HeroBanner({ banner }: BannerProps) {
@@ -57,14 +57,14 @@ export default function HeroBanner({ banner }: BannerProps) {
           ''
         )}
         {banner.call_to_action.title && banner.call_to_action.href ? (
-          <a href={banner.call_to_action.href} {...banner.call_to_action.$?.href} class="btn tertiary-btn">
+          <a href={banner.call_to_action.href} {...(typeof banner.call_to_action.$?.href === 'object' ? banner.call_to_action.$?.href : {})} class="btn tertiary-btn">
             {banner.call_to_action.title}
           </a>
         ) : (
           ''
         )}
       </div>
-      {banner.banner_image ? <img alt={banner.banner_image.filename} src={banner.banner_image.url} {...banner.banner_image.$?.url} /> : ''}
+      <img alt={banner.banner_image.filename} src={banner.banner_image.url} {...(typeof banner.banner_image.$?.url === 'object' ? banner.banner_image.$?.url : {})} />
     </div>
   );
 }

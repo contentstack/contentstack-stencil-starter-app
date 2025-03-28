@@ -6,26 +6,26 @@ type AdditionalParam = {
   description: {};
   name: {};
   designation: {};
-}
+};
 
 type Employee = {
   image: Image;
   name: string;
   designation: string;
   $: AdditionalParam;
-}
+};
 
 type Data = {
   title_h2: string;
   description: string;
   employees: [Employee];
   $: AdditionalParam;
-}
+};
 
 type OurTeam = {
   ourTeam: Data;
   key: string;
-}
+};
 
 export default function TeamSection(props: OurTeam) {
   const { ourTeam } = props;
@@ -38,7 +38,8 @@ export default function TeamSection(props: OurTeam) {
       <div class="team-content">
         {ourTeam.employees?.map((employee, index) => (
           <div class="team-details" key={index}>
-            {employee.image && <img {...employee.image.$?.url} alt={employee.image.filename} src={employee.image.url} />}
+            {employee.image && <img {...(typeof employee.image.$?.url === 'object' ? employee.image.$?.url : {})} alt={employee.image.filename} src={employee.image.url} />}
+
             <div class="team-details">
               {employee.name && <h3 {...employee.$?.name}>{employee.name}</h3>}
               {employee.designation && <p {...employee.$?.designation}>{employee.designation}</p>}

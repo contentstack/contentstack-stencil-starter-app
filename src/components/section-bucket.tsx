@@ -6,26 +6,26 @@ type AdditionalParam = {
   title_h2: {};
   title_h3: {};
   description: {};
-}
+};
 
 type Bucket = {
   title_h3: string;
   icon: Image;
   description: string;
   call_to_action: Action;
-  $: AdditionalParam
-}
+  $: AdditionalParam;
+};
 
 type Data = {
   title_h2: string;
   description: string;
   buckets: [Bucket];
   $: AdditionalParam;
-}
+};
 
 type BucketProps = {
   section: Data;
-}
+};
 
 export default function SectionBucket({ section }: BucketProps) {
   return (
@@ -37,12 +37,15 @@ export default function SectionBucket({ section }: BucketProps) {
       <div class="member-section">
         {section.buckets?.map((bucket, index) => (
           <div class="content-section" key={index}>
-            {bucket.icon && <img {...bucket.icon.$?.url} src={bucket.icon.url} alt="bucket icon" />}
+            {bucket.icon && <img {...(typeof bucket.icon.$?.url === 'object' ? bucket.icon.$?.url : {})} src={bucket.icon.url} alt="bucket icon" />}
 
             {bucket.title_h3 ? <h3 {...bucket.$?.title_h3}>{bucket.title_h3}</h3> : ''}
             {bucket.description && <span {...bucket.$?.description}>{parse(bucket.description)}</span>}
             {bucket.call_to_action.title ? (
-              <a {...bucket.call_to_action.$?.href} href={bucket.call_to_action.href ? bucket.call_to_action.href : '#'}>{`${bucket.call_to_action.title} -->`}</a>
+              <a
+                {...(typeof bucket.call_to_action.$?.href === 'object' ? bucket.call_to_action.$?.href : {})}
+                href={bucket.call_to_action.href ? bucket.call_to_action.href : '#'}
+              >{`${bucket.call_to_action.title} -->`}</a>
             ) : (
               ''
             )}

@@ -30,21 +30,31 @@ type BucketProps = {
 }
 
 function bucketContent(bucket: Bucket, index: number) {
+
   return (
     <div class="mission-content-section" key={index}>
-      {bucket.icon && <img class="mission-icon" {...bucket.icon.$?.url} src={bucket.icon.url} alt="art work" />}
+      {bucket.icon && (
+        <img
+          class="mission-icon"
+          {...(typeof bucket.icon.$?.url === "object" ? bucket.icon.$.url : {})}
+          src={bucket.icon.url}
+          alt="art work"
+        />
+      )}
 
       <div class="mission-section-content">
-        {bucket.title_h3 && <h3 {...bucket.$?.title_h3}>{bucket.title_h3}</h3>}
-        <span {...bucket.$?.description}>{bucket.description && parse(bucket.description)}</span>
+        {bucket.title_h3 && <h3 {...(bucket.$?.title_h3 ?? {})}>{bucket.title_h3}</h3>}
+        <span {...(bucket.$?.description ?? {})}>
+          {bucket.description ? parse(bucket.description) : ""}
+        </span>
       </div>
     </div>
   );
 }
 
+
 export default function AboutSectionBucket(props: BucketProps) {
   const { sectionWithBuckets } = props;
-
   return (
     <div class="member-main-section">
       <div class="member-head">
